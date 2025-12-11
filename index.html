@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>あみだくじ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 あみだくじ</h1>
+        
+        <div class="setup-section" id="setupSection">
+            <div class="input-group">
+                <label>参加者の名前（カンマ区切り）:</label>
+                <input type="text" id="participants" placeholder="例: 太郎, 花子, 次郎, 美咲">
+            </div>
+            
+            <div class="input-group">
+                <label>結果/景品（カンマ区切り）:</label>
+                <input type="text" id="results" placeholder="例: 1等, 2等, 3等, 4等">
+            </div>
+            
+            <div class="input-group">
+                <label>横線の数:</label>
+                <input type="number" id="lineCount" value="15" min="5" max="30">
+            </div>
+            
+            <button class="btn btn-primary" onclick="generateAmidakuji()">あみだくじを生成</button>
+        </div>
+        
+        <div class="game-section" id="gameSection" style="display: none;">
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="resetGame()">最初から</button>
+                <button class="btn btn-primary" onclick="revealAll()">すべて表示</button>
+            </div>
+            
+            <div class="amidakuji-container">
+                <canvas id="amidakujiCanvas"></canvas>
+            </div>
+            
+            <div class="results-display" id="resultsDisplay"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
