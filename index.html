@@ -22,8 +22,9 @@
             </div>
             
             <div class="input-group">
-                <label>横線の数:</label>
-                <input type="number" id="lineCount" value="15" min="5" max="30">
+                <label>初期の横線の数:</label>
+                <input type="number" id="lineCount" value="0" min="0" max="30">
+                <small style="color: #888; display: block; margin-top: 5px;">※0にすると、後から好きな場所に線を追加できます</small>
             </div>
             
             <button class="btn btn-primary" onclick="generateAmidakuji()">あみだくじを生成</button>
@@ -32,7 +33,12 @@
         <div class="game-section" id="gameSection" style="display: none;">
             <div class="controls">
                 <button class="btn btn-secondary" onclick="resetGame()">最初から</button>
+                <button class="btn btn-secondary" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>
                 <button class="btn btn-primary" onclick="revealAll()">すべて表示</button>
+            </div>
+            
+            <div id="addModeInfo" class="add-mode-info" style="display: none;">
+                <p>📍 数字をクリックして横線を追加してください</p>
             </div>
             
             <div class="amidakuji-container">

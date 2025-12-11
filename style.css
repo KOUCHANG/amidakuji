@@ -144,6 +144,21 @@ canvas {
     color: #667eea;
 }
 
+.add-mode-info {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.2) 100%);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px dashed #ff6b6b;
+}
+
+.add-mode-info p {
+    margin: 0;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
 @media (max-width: 768px) {
     .container {
         padding: 20px;

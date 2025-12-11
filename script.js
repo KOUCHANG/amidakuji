@@ -2,6 +2,8 @@ let participants = [];
 let results = [];
 let horizontalLines = [];
 let canvas, ctx;
+let addLineMode = false;
+let addablePositions = [];
 let config = {
     lineWidth: 3,
     verticalLineColor: '#333',
@@ -44,6 +46,7 @@ function generateAmidakuji() {
     document.getElementById('gameSection').style.display = 'block';
     
     drawAmidakuji();
+    calculateAddablePositions();
 }
 
 function generateHorizontalLines(count) {
@@ -80,13 +83,31 @@ function generateHorizontalLines(count) {
     horizontalLines.sort((a, b) => a.y - b.y);
 }
 
+function calculateAddablePositions() {
+    addablePositions = [];
+    const numPaths = participants.length;
+    const totalHeight = canvas.height - config.padding * 2;
+    const spacing = 50; // 等間隔の間隔(ピクセル)
+    
+    // 等間隔で追加可能位置を計算
+    for (let y = config.padding + spacing; y < canvas.height - config.padding; y += spacing) {
+        for (let col = 0; col < numPaths - 1; col++) {
+            addablePositions.push({ y, column: col, id: addablePositions.length });
+        }
+    }
+}
+
 function drawAmidakuji() {
     canvas = document.getElementById('amidakujiCanvas');
     ctx = canvas.getContext('2d');
     
     const numPaths = participants.length;
     const canvasWidth = config.padding * 2 + config.verticalSpacing * (numPaths - 1);
-    const canvasHeight = config.padding * 2 + config.horizontalSpacing * (horizontalLines.length + 2);
+    const maxY = Math.max(
+        config.horizontalSpacing * (horizontalLines.length + 2),
+        400 // 最小の高さ
+    );
+    const canvasHeight = config.padding * 2 + maxY;
     
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -134,8 +155,45 @@ function drawAmidakuji() {
         // 結果は最初は表示しない
     }
     
+    // 追加モードの場合、追加可能な位置に数字を表示
+    if (addLineMode) {
+        drawAddablePositions();
+    }
+    
     // クリックイベントを追加
     canvas.onclick = handleCanvasClick;
+}
+
+function drawAddablePositions() {
+    ctx.font = 'bold 14px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    for (let pos of addablePositions) {
+        // 既存の横線と重なっていないかチェック
+        const tooClose = horizontalLines.some(line => 
+            Math.abs(line.y - pos.y) < 25 && line.column === pos.column
+        );
+        
+        if (!tooClose) {
+            const x = config.padding + pos.column * config.verticalSpacing + config.verticalSpacing / 2;
+            
+            // 背景円を描画
+            ctx.fillStyle = 'rgba(102, 126, 234, 0.1)';
+            ctx.beginPath();
+            ctx.arc(x, pos.y, 15, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // 枠線を描画
+            ctx.strokeStyle = 'rgba(102, 126, 234, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+            
+            // 番号を描画
+            ctx.fillStyle = '#667eea';
+            ctx.fillText((pos.id % 99 + 1).toString(), x, pos.y);
+        }
+    }
 }
 
 function handleCanvasClick(event) {
@@ -143,12 +201,35 @@ function handleCanvasClick(event) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     
-    // 参加者名がクリックされたかチェック
-    for (let i = 0; i < participants.length; i++) {
-        const participantX = config.padding + i * config.verticalSpacing;
-        if (Math.abs(x - participantX) < 30 && y < config.padding) {
-            tracePathWithAnimation(i);
-            break;
+    if (addLineMode) {
+        // 追加可能な位置がクリックされたかチェック
+        for (let pos of addablePositions) {
+            const posX = config.padding + pos.column * config.verticalSpacing + config.verticalSpacing / 2;
+            const distance = Math.sqrt(Math.pow(x - posX, 2) + Math.pow(y - pos.y, 2));
+            
+            if (distance < 20) {
+                // 既存の横線と重なっていないかチェック
+                const tooClose = horizontalLines.some(line => 
+                    Math.abs(line.y - pos.y) < 25 && line.column === pos.column
+                );
+                
+                if (!tooClose) {
+                    // 横線を追加
+                    horizontalLines.push({ y: pos.y, column: pos.column });
+                    horizontalLines.sort((a, b) => a.y - b.y);
+                    drawAmidakuji();
+                }
+                return;
+            }
+        }
+    } else {
+        // 参加者名がクリックされたかチェック
+        for (let i = 0; i < participants.length; i++) {
+            const participantX = config.padding + i * config.verticalSpacing;
+            if (Math.abs(x - participantX) < 30 && y < config.padding) {
+                tracePathWithAnimation(i);
+                break;
+            }
         }
     }
 }
@@ -291,9 +372,31 @@ function revealAll() {
     }
 }
 
+function toggleAddLineMode() {
+    addLineMode = !addLineMode;
+    const btn = document.getElementById('toggleAddMode');
+    const info = document.getElementById('addModeInfo');
+    
+    if (addLineMode) {
+        btn.textContent = '線を追加中...';
+        btn.style.background = '#ff6b6b';
+        info.style.display = 'block';
+        canvas.style.cursor = 'pointer';
+    } else {
+        btn.textContent = '線を追加';
+        btn.style.background = '#6c757d';
+        info.style.display = 'none';
+        canvas.style.cursor = 'pointer';
+    }
+    
+    drawAmidakuji();
+}
+
 function resetGame() {
+    addLineMode = false;
     document.getElementById('setupSection').style.display = 'block';
     document.getElementById('gameSection').style.display = 'none';
     document.getElementById('resultsDisplay').innerHTML = '';
     document.getElementById('resultsDisplay').style.display = 'none';
+    document.getElementById('addModeInfo').style.display = 'none';
 }
