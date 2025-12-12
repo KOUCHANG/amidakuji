@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1212',
-    buildDate: '2025-12-12 21:12:35 +0900',
-    commit: '96b2eff'
+    version: '2025.12.12-1217',
+    buildDate: '2025-12-12 21:17:08 +0900',
+    commit: '3e0420d'
 };
 
 let participants = [];
@@ -14,6 +14,21 @@ let addLineMode = false;
 let addablePositions = [];
 let resultViewMode = false; // 結果モード：道順を見るモード
 let currentBackgroundColor = null; // 現在の背景色を記録
+let revealedPaths = []; // アニメーションされた参加者と結果のペアを記録
+
+// 囲み用の色パレット
+const highlightColors = [
+    '#ff6b6b', // レッド
+    '#4ecdc4', // シアン
+    '#45b7d1', // ブルー
+    '#f9ca24', // イエロー
+    '#6c5ce7', // パープル
+    '#fd79a8', // ピンク
+    '#00b894', // グリーン
+    '#fdcb6e', // オレンジ
+    '#e17055', // コーラル
+    '#a29bfe'  // ライトパープル
+];
 
 // 識別しやすい背景色のパレット（グラデーション用の色ペア）
 const backgroundColors = [
@@ -82,6 +97,9 @@ function updateAmidakuji() {
     
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
+    
+    // 囲み情報をクリア
+    revealedPaths = [];
     
     // 結果をランダムにシャッフル
     shuffledResults = [...results].sort(() => Math.random() - 0.5);
@@ -341,6 +359,9 @@ function drawAmidakuji() {
     if (resultViewMode) {
         showAllResults();
     }
+    
+    // アニメーション済みの参加者と結果を囲む
+    drawRevealedHighlights();
 }
 
 function drawAddablePositions() {
@@ -372,6 +393,35 @@ function drawAddablePositions() {
             ctx.fillStyle = '#667eea';
             ctx.fillText((pos.id % 99 + 1).toString(), x, pos.y);
         }
+    }
+}
+
+function drawRevealedHighlights() {
+    // アニメーション済みの参加者と結果を囲む
+    for (let revealed of revealedPaths) {
+        const participantIndex = revealed.participantIndex;
+        const resultIndex = revealed.resultIndex;
+        const color = highlightColors[participantIndex % highlightColors.length];
+        
+        // 参加者名を囲む（上部）
+        const participantX = config.padding + participantIndex * config.verticalSpacing;
+        const participantY = config.padding - 15;
+        
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(participantX, participantY, 25, 0, Math.PI * 2);
+        ctx.stroke();
+        
+        // 結果を囲む（下部）
+        const resultX = config.padding + resultIndex * config.verticalSpacing;
+        const resultY = canvas.height - config.padding + 30;
+        
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.arc(resultX, resultY, 30, 0, Math.PI * 2);
+        ctx.stroke();
     }
 }
 
@@ -513,9 +563,25 @@ function tracePathWithAnimation(startIndex, showResult = false) {
             progress++;
             setTimeout(animate, frameInterval);
         } else {
-            // アニメーション終了後、showResultがtrueの場合のみ結果を表示
+            // アニメーション終了後、結果を記録して囲みを追加
+            const endIndex = path[path.length - 1].column;
+            
+            // 既に記録されていない場合のみ追加
+            const alreadyRevealed = revealedPaths.some(
+                r => r.participantIndex === startIndex && r.resultIndex === endIndex
+            );
+            if (!alreadyRevealed) {
+                revealedPaths.push({
+                    participantIndex: startIndex,
+                    resultIndex: endIndex
+                });
+            }
+            
+            // 囲みを表示
+            drawAmidakuji();
+            
+            // showResultがtrueの場合のみ結果テキストを表示
             if (showResult) {
-                const endIndex = path[path.length - 1].column;
                 displayResult(startIndex, endIndex);
             }
         }
