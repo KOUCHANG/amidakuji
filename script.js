@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1220',
-    buildDate: '2025-12-12 21:19:52 +0900',
-    commit: '6a166ee'
+    version: '2025.12.12-1223',
+    buildDate: '2025-12-12 21:23:15 +0900',
+    commit: 'f81b4a7'
 };
 
 let participants = [];
@@ -15,20 +15,7 @@ let addablePositions = [];
 let resultViewMode = false; // 結果モード：道順を見るモード
 let currentBackgroundColor = null; // 現在の背景色を記録
 let revealedPaths = []; // アニメーションされた参加者と結果のペアを記録
-
-// 囲み用の色パレット
-const highlightColors = [
-    '#ff6b6b', // レッド
-    '#4ecdc4', // シアン
-    '#45b7d1', // ブルー
-    '#f9ca24', // イエロー
-    '#6c5ce7', // パープル
-    '#fd79a8', // ピンク
-    '#00b894', // グリーン
-    '#fdcb6e', // オレンジ
-    '#e17055', // コーラル
-    '#a29bfe'  // ライトパープル
-];
+let highlightColors = []; // 星マーク用の色パレット（動的生成）
 
 // 識別しやすい背景色のパレット（グラデーション用の色ペア）
 const backgroundColors = [
@@ -62,6 +49,20 @@ console.log('%c🎯 あみだくじ', 'font-size: 20px; font-weight: bold; color
 console.log(`%cVersion: ${BUILD_INFO.version}`, 'color: #27ae60; font-weight: bold;');
 console.log(`%cBuild Date: ${BUILD_INFO.buildDate}`, 'color: #27ae60;');
 console.log(`%cCommit: ${BUILD_INFO.commit}`, 'color: #27ae60;');
+
+// 景品の数に応じて最も離れた色を生成
+function generateDistinctColors(count) {
+    const colors = [];
+    for (let i = 0; i < count; i++) {
+        // 色相を360度で均等に分割
+        const hue = (i * 360 / count) % 360;
+        // 彩度を高め、明度を適度に設定（見やすい色に）
+        const saturation = 70; // 70%
+        const lightness = 50;  // 50%
+        colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+    }
+    return colors;
+}
 
 function updateAmidakuji() {
     const resultInput = document.getElementById('results').value.trim();
@@ -103,6 +104,9 @@ function updateAmidakuji() {
     
     // 結果をランダムにシャッフル
     shuffledResults = [...results].sort(() => Math.random() - 0.5);
+    
+    // 景品の数に応じて最も離れた色を生成
+    highlightColors = generateDistinctColors(numParticipants);
     
     // 背景色をランダムに変更（前回と異なる色を選択）
     changeBackgroundColor();
