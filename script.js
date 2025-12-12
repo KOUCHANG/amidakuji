@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0349',
-    buildDate: '2025-12-12 12:49:28 +0900',
-    commit: 'c4cacb1'
+    version: '2025.12.12-0405',
+    buildDate: '2025-12-12 13:05:18 +0900',
+    commit: '840c2aa'
 };
 
 let participants = [];
@@ -70,6 +70,21 @@ function updateAmidakuji() {
     createNameInputs();
     
     drawAmidakuji();
+    
+    // 初回作成時：メインコンテンツと設定ボタンを表示
+    const mainContainer = document.getElementById('mainContainer');
+    const settingsBtn = document.getElementById('settingsBtn');
+    if (mainContainer) mainContainer.style.display = 'flex';
+    if (settingsBtn) settingsBtn.style.display = 'block';
+    
+    // モーダルのタイトルとボタンを更新
+    const modalTitle = document.getElementById('modalTitle');
+    const createBtn = document.getElementById('createBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    
+    if (modalTitle) modalTitle.textContent = '結果/景品の設定';
+    if (createBtn) createBtn.textContent = 'あみだくじを更新';
+    if (closeModalBtn) closeModalBtn.style.display = 'flex';
     
     // モーダルを閉じる
     closeSettings();
@@ -578,6 +593,11 @@ function openSettings() {
 }
 
 function closeSettings(event) {
+    // 初回（あみだくじ未作成）の場合は閉じない
+    if (results.length === 0) {
+        return;
+    }
+    
     const modal = document.getElementById('settingsModal');
     // eventがundefinedの場合は閉じる、eventがあればモーダル外クリックのみ閉じる
     if (!event || event.target === modal) {
