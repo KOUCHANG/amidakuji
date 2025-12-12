@@ -1,4 +1,4 @@
-name: Update Version Info
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -9,14 +9,12 @@ permissions:
   contents: write
 
 jobs:
-  update-version:
+  deploy:
     runs-on: ubuntu-latest
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0  # 完全な履歴を取得
       
       - name: Update version info
         run: |
@@ -34,19 +32,11 @@ jobs:
           sed -i "s|// Version: .*|// Version: ${VERSION}|" script.js
           sed -i "s|// Build Date: .*|// Build Date: ${COMMIT_DATE}|" script.js
           sed -i "s|// Commit: .*|// Commit: ${COMMIT_HASH}|" script.js
-          
-      - name: Check if changes exist
-        id: check_changes
-        run: |
-          git diff --quiet script.js || echo "changed=true" >> $GITHUB_OUTPUT
       
-      - name: Commit and push changes
-        if: steps.check_changes.outputs.changed == 'true'
-        run: |
-          git config user.name "KOUCHANG"
-          git config user.email "grasshopper.like.ant@gmail.com"
-          git add script.js
-          git commit -m "chore: auto-update version info [skip ci]"
-          git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          commit_message: "Deploy from ${{ github.sha }}"

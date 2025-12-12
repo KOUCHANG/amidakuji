@@ -34,27 +34,24 @@ open index.html
 
 ## デプロイ
 
-変更をmainブランチにプッシュすると、GitHub Actionsが自動的にバージョン情報を更新します:
+変更をmainブランチにプッシュすると、GitHub Actionsが自動的に:
+1. 最新のコミットハッシュとバージョン情報を埋め込む
+2. `gh-pages`ブランチにデプロイ
+3. GitHub Pagesで公開
 
 ```bash
-# 変更をコミット＆プッシュ
+# 変更をコミット＆プッシュするだけ
 git add -A
 git commit -m "Add new feature"
 git push origin main
 ```
 
-プッシュ後、GitHub Actionsが自動的に:
-1. 最新のコミットハッシュを取得
-2. script.jsのバージョン情報を更新
-3. 自動的にコミット＆プッシュ
+**重要**: GitHub Pagesの設定で、デプロイ元を`gh-pages`ブランチに設定してください:
+1. リポジトリの Settings > Pages
+2. Source: Deploy from a branch
+3. Branch: `gh-pages` / `/ (root)`
 
-手動でバージョン更新したい場合:
-```bash
-./update-version.sh
-git add script.js
-git commit -m "Update version manually"
-git push origin main
-```
+mainブランチはソースコード用、gh-pagesブランチは公開用として分離されます。
 
 ブラウザのコンソール（F12）でバージョン情報を確認できます。
 
