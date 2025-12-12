@@ -7,6 +7,7 @@ const BUILD_INFO = {
 
 let participants = [];
 let results = [];
+let shuffledResults = []; // ランダムに配置された結果
 let horizontalLines = [];
 let canvas, ctx;
 let addLineMode = false;
@@ -65,6 +66,9 @@ function updateAmidakuji() {
     
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
+    
+    // 結果をランダムにシャッフル
+    shuffledResults = [...results].sort(() => Math.random() - 0.5);
     
     // 参加者入力フィールドを作成
     createNameInputs();
@@ -535,7 +539,7 @@ function displayResult(startIndex, endIndex) {
     ctx.fillStyle = config.resultColor;
     ctx.textAlign = 'center';
     const x = config.padding + endIndex * config.verticalSpacing;
-    ctx.fillText(results[endIndex], x, canvas.height - config.padding + 30);
+    ctx.fillText(shuffledResults[endIndex], x, canvas.height - config.padding + 30);
 }
 
 function showAllResults() {
@@ -548,7 +552,7 @@ function showAllResults() {
         const path = tracePath(i);
         const endIndex = path[path.length - 1].column;
         const x = config.padding + endIndex * config.verticalSpacing;
-        ctx.fillText(results[endIndex], x, canvas.height - config.padding + 30);
+        ctx.fillText(shuffledResults[endIndex], x, canvas.height - config.padding + 30);
     }
 }
 
