@@ -22,9 +22,6 @@ function generateAmidakuji() {
     const resultInput = document.getElementById('results').value.trim();
     const lineCount = parseInt(document.getElementById('lineCount').value);
     
-    console.log('Raw participant input:', JSON.stringify(participantInput));
-    console.log('Raw result input:', JSON.stringify(resultInput));
-    
     if (!participantInput || !resultInput) {
         alert('参加者と結果を入力してください。');
         return;
@@ -42,9 +39,6 @@ function generateAmidakuji() {
         // 1行でスペース区切りの場合
         results = results[0].split(/\s+/).filter(r => r);
     }
-    
-    console.log('Parsed participants:', participants, 'Count:', participants.length);
-    console.log('Parsed results:', results, 'Count:', results.length);
     
     if (participants.length !== results.length) {
         alert('参加者と結果の数を同じにしてください。');
