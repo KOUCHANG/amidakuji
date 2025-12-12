@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1157',
-    buildDate: '2025-12-12 20:57:25 +0900',
-    commit: '5dc6434'
+    version: '2025.12.12-1201',
+    buildDate: '2025-12-12 21:00:55 +0900',
+    commit: '9c48da5'
 };
 
 let participants = [];
@@ -39,7 +39,7 @@ let config = {
     padding: 60,
     verticalSpacing: 120,
     horizontalSpacing: 40,
-    animationSpeed: 0.00001
+    animationSpeed: 0.5
 };
 
 // バージョン情報をコンソールに出力
@@ -472,6 +472,9 @@ function tracePathWithAnimation(startIndex, showResult = false) {
     const path = tracePath(startIndex);
     let currentStep = 0;
     
+    // animationSpeedに基づいてフレーム間隔を計算（速度が小さいほど遅くなる）
+    const frameInterval = 50 / config.animationSpeed;
+    
     function animate() {
         if (currentStep < path.length - 1) {
             drawAmidakuji();
@@ -492,7 +495,7 @@ function tracePathWithAnimation(startIndex, showResult = false) {
             }
             
             currentStep++;
-            setTimeout(animate, 50);
+            setTimeout(animate, frameInterval);
         } else {
             // アニメーション終了後、showResultがtrueの場合のみ結果を表示
             if (showResult) {
