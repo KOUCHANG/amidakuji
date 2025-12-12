@@ -23,9 +23,14 @@
                 </div>
                 
                 <div class="controls" style="margin-top: 20px;">
+                    <button class="btn btn-secondary" id="toggleResultMode" onclick="toggleResultMode()">結果モード</button>
                     <button class="btn btn-secondary" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>
                     <button class="btn btn-secondary" onclick="clearLines()">線をクリア</button>
                     <button class="btn btn-primary" onclick="revealAll()">すべて表示</button>
+                </div>
+                
+                <div id="resultModeInfo" class="result-mode-info" style="display: none; margin-top: 15px;">
+                    <p>👆 参加者をクリックして道順を確認できます</p>
                 </div>
                 
                 <div id="addModeInfo" class="add-mode-info" style="display: none; margin-top: 15px;">
