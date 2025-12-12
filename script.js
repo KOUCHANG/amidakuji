@@ -39,7 +39,7 @@ let config = {
     padding: 60,
     verticalSpacing: 120,
     horizontalSpacing: 40,
-    animationSpeed: 2.5
+    animationSpeed: 2.0
 };
 
 // バージョン情報をコンソールに出力
