@@ -244,11 +244,24 @@ function drawAmidakuji() {
     
     const numPaths = participants.length;
     const canvasWidth = config.padding * 2 + config.verticalSpacing * (numPaths - 1);
+    
+    // 結果テキストの最大行数を計算（仮測定）
+    ctx.font = 'bold 14px sans-serif';
+    const maxWidth = config.verticalSpacing - 20;
+    let maxResultLines = 1;
+    for (let result of shuffledResults) {
+        const lines = calculateTextLines(result, maxWidth);
+        maxResultLines = Math.max(maxResultLines, lines.length);
+    }
+    
+    // 結果テキストの高さを考慮（1行あたり20px + 上部余白30px）
+    const resultTextHeight = maxResultLines * 20 + 30;
+    
     const maxY = Math.max(
         config.horizontalSpacing * (horizontalLines.length + 2),
         400 // 最小の高さ
     );
-    const canvasHeight = config.padding * 2 + maxY;
+    const canvasHeight = config.padding * 2 + maxY + resultTextHeight;
     
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -533,19 +546,16 @@ function tracePath(startColumn) {
     return path;
 }
 
-// 長いテキストを複数行に分割して描画する関数
-function drawMultiLineText(text, x, y, maxWidth, lineHeight) {
+// テキストを複数行に分割する関数（描画なし）
+function calculateTextLines(text, maxWidth) {
     ctx.font = 'bold 16px sans-serif';
-    ctx.fillStyle = config.resultColor;
-    ctx.textAlign = 'center';
     
     // テキストの幅を測定
     const textWidth = ctx.measureText(text).width;
     
-    // 最大幅以内なら1行で表示
+    // 最大幅以内なら1行で返す
     if (textWidth <= maxWidth) {
-        ctx.fillText(text, x, y);
-        return;
+        return [text];
     }
     
     // 文字を1文字ずつ追加して、最大幅を超えたら改行
@@ -565,6 +575,17 @@ function drawMultiLineText(text, x, y, maxWidth, lineHeight) {
         }
     }
     lines.push(line);
+    
+    return lines;
+}
+
+// 長いテキストを複数行に分割して描画する関数
+function drawMultiLineText(text, x, y, maxWidth, lineHeight) {
+    ctx.font = 'bold 16px sans-serif';
+    ctx.fillStyle = config.resultColor;
+    ctx.textAlign = 'center';
+    
+    const lines = calculateTextLines(text, maxWidth);
     
     // 複数行を描画（中央揃え）
     const startY = y - ((lines.length - 1) * lineHeight) / 2;
