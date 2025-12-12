@@ -144,7 +144,6 @@ function initCanvasEvents() {
 window.addEventListener('DOMContentLoaded', () => {
     initCanvasEvents();
 });
-}
 
 function clearLines() {
     horizontalLines = [];
