@@ -408,6 +408,14 @@ function toggleAddLineMode() {
 
 function resetGame() {
     addLineMode = false;
+    
+    // ボタンの状態をリセット
+    const btn = document.getElementById('toggleAddMode');
+    if (btn) {
+        btn.textContent = '線を追加';
+        btn.style.cssText = 'background: #6c757d; color: white;';
+    }
+    
     document.getElementById('setupSection').style.display = 'block';
     document.getElementById('gameSection').style.display = 'none';
     document.getElementById('resultsDisplay').innerHTML = '';
