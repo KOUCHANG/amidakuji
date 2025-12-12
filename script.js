@@ -46,7 +46,6 @@ function generateAmidakuji() {
     document.getElementById('gameSection').style.display = 'block';
     
     drawAmidakuji();
-    calculateAddablePositions();
 }
 
 function generateHorizontalLines(count) {
@@ -154,6 +153,9 @@ function drawAmidakuji() {
         const x = config.padding + i * config.verticalSpacing;
         // 結果は最初は表示しない
     }
+    
+    // キャンバスのサイズが確定した後に追加可能位置を計算
+    calculateAddablePositions();
     
     // 追加モードの場合、追加可能な位置に数字を表示
     if (addLineMode) {
@@ -379,12 +381,12 @@ function toggleAddLineMode() {
     
     if (addLineMode) {
         btn.textContent = '線を追加中...';
-        btn.style.background = '#ff6b6b';
+        btn.style.cssText = 'background: #ff6b6b !important; color: white;';
         info.style.display = 'block';
         canvas.style.cursor = 'pointer';
     } else {
         btn.textContent = '線を追加';
-        btn.style.background = '#6c757d';
+        btn.style.cssText = 'background: #6c757d; color: white;';
         info.style.display = 'none';
         canvas.style.cursor = 'pointer';
     }
