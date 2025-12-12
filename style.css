@@ -88,6 +88,8 @@ h1 {
     background: white;
     width: 120px;
     cursor: pointer;
+    min-width: 40px;
+    max-width: 120px;
 }
 
 .name-input:focus {
@@ -113,6 +115,8 @@ canvas {
     cursor: pointer;
     max-width: 100%;
     height: auto;
+    touch-action: none; /* タッチイベントの最適化 */
+    -webkit-tap-highlight-color: transparent; /* タップハイライトを無効化 */
 }
 
 /* アクションボタン */
