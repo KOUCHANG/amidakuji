@@ -27,8 +27,8 @@ function generateAmidakuji() {
         return;
     }
     
-    participants = participantInput.split(',').map(p => p.trim()).filter(p => p);
-    results = resultInput.split(',').map(r => r.trim()).filter(r => r);
+    participants = participantInput.split('\n').map(p => p.trim()).filter(p => p);
+    results = resultInput.split('\n').map(r => r.trim()).filter(r => r);
     
     if (participants.length !== results.length) {
         alert('参加者と結果の数を同じにしてください。');
