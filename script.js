@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0641',
-    buildDate: '2025-12-12 15:41:08 +0900',
-    commit: '5a1a058'
+    version: '2025.12.12-1137',
+    buildDate: '2025-12-12 20:37:42 +0900',
+    commit: '2854532'
 };
 
 let participants = [];
@@ -13,6 +13,22 @@ let canvas, ctx;
 let addLineMode = false;
 let addablePositions = [];
 let resultViewMode = false; // 結果モード：道順を見るモード
+let currentBackgroundColor = null; // 現在の背景色を記録
+
+// 識別しやすい背景色のパレット
+const backgroundColors = [
+    '#e3f2fd', // ライトブルー
+    '#f1f8e9', // ライトグリーン
+    '#fff3e0', // ライトオレンジ
+    '#fce4ec', // ライトピンク
+    '#f3e5f5', // ライトパープル
+    '#e0f2f1', // ライトシアン
+    '#fff9c4', // ライトイエロー
+    '#ffe0b2', // ライトディープオレンジ
+    '#e1bee7', // ライトディープパープル
+    '#c5cae9'  // ライトインディゴ
+];
+
 let config = {
     lineWidth: 3,
     verticalLineColor: '#333',
@@ -69,6 +85,9 @@ function updateAmidakuji() {
     
     // 結果をランダムにシャッフル
     shuffledResults = [...results].sort(() => Math.random() - 0.5);
+    
+    // 背景色をランダムに変更（前回と異なる色を選択）
+    changeBackgroundColor();
     
     // 参加者入力フィールドを作成
     createNameInputs();
@@ -699,4 +718,25 @@ function resetAmidakuji() {
         toggleAddLineMode();
     }
     drawAmidakuji();
+}
+// 背景色をランダムに変更（前回と異なる色を選択）
+function changeBackgroundColor() {
+    let newColor;
+    let availableColors = backgroundColors;
+    
+    // 前回の色がある場合、それを除外
+    if (currentBackgroundColor) {
+        availableColors = backgroundColors.filter(color => color !== currentBackgroundColor);
+    }
+    
+    // ランダムに色を選択
+    newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+    
+    // 背景色を適用
+    document.body.style.backgroundColor = newColor;
+    
+    // 現在の色を記録
+    currentBackgroundColor = newColor;
+    
+    console.log(`%c背景色変更: ${newColor}`, `background: ${newColor}; padding: 5px; border-radius: 3px;`);
 }
