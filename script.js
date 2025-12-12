@@ -732,8 +732,8 @@ function toggleResultMode() {
         if (addLineMode) {
             toggleAddLineMode();
         }
-        // 結果を表示（revealAllと同じ処理）
-        showAllResults();
+        // キャンバスを再描画して結果を表示
+        drawAmidakuji();
     } else {
         btn.textContent = '結果モード';
         btn.style.cssText = 'background: #667eea; color: white;';
