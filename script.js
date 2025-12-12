@@ -206,28 +206,30 @@ function calculateAddablePositions() {
     const spacing = 50; // 等間隔の間隔(ピクセル)
     const offset = spacing / 2; // 偶数列のオフセット
     
-    // まず全ての位置を生成（idは後で振り直す）
+    // まず全ての位置を生成
     let tempPositions = [];
     for (let col = 0; col < numPaths - 1; col++) {
         const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
         for (let y = startY; y < canvas.height - config.padding; y += spacing) {
-            tempPositions.push({ y, column: col });
+            // 段番号を計算（offset考慮で正規化）
+            const normalizedY = col % 2 === 0 ? y : y - offset;
+            const row = Math.round((normalizedY - config.padding) / spacing);
+            tempPositions.push({ y, column: col, row });
         }
     }
     
-    // y座標（段）でソートしてから、同じ段内では列でソート
+    // 段番号→列番号の順でソート
     tempPositions.sort((a, b) => {
-        if (Math.abs(a.y - b.y) < spacing / 2) {
-            // 同じ段（y座標が近い）の場合は列順
-            return a.column - b.column;
+        if (a.row !== b.row) {
+            return a.row - b.row;
         }
-        // 異なる段の場合はy座標順
-        return a.y - b.y;
+        return a.column - b.column;
     });
     
-    // ソート後にidを振り直す（横から順に番号が振られる）
+    // ソート後にidを振り直す（1列目、2列目、3列目...の順）
     addablePositions = tempPositions.map((pos, index) => ({
-        ...pos,
+        y: pos.y,
+        column: pos.column,
         id: index
     }));
 }
