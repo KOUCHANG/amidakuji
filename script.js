@@ -207,6 +207,11 @@ function drawAmidakuji() {
         drawAddablePositions();
     }
     
+    // 結果モード中は結果を表示
+    if (resultViewMode) {
+        showAllResults();
+    }
+    
     // クリックイベントを追加
     canvas.onclick = handleCanvasClick;
 }
