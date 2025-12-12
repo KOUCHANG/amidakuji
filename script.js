@@ -277,7 +277,7 @@ function handleCanvasClick(event) {
     }
 }
 
-function tracePathWithAnimation(startIndex) {
+function tracePathWithAnimation(startIndex, showResult = false) {
     const path = tracePath(startIndex);
     let currentStep = 0;
     
@@ -303,9 +303,11 @@ function tracePathWithAnimation(startIndex) {
             currentStep++;
             setTimeout(animate, 50);
         } else {
-            // アニメーション終了後、結果を表示
-            const endIndex = path[path.length - 1].column;
-            showResult(startIndex, endIndex);
+            // アニメーション終了後、showResultがtrueの場合のみ結果を表示
+            if (showResult) {
+                const endIndex = path[path.length - 1].column;
+                displayResult(startIndex, endIndex);
+            }
         }
     }
     
@@ -367,8 +369,10 @@ function tracePath(startColumn) {
     return path;
 }
 
-function showResult(startIndex, endIndex) {
+function displayResult(startIndex, endIndex) {
     const resultsDisplay = document.getElementById('resultsDisplay');
+    // 既存の結果をクリア
+    resultsDisplay.innerHTML = '';
     resultsDisplay.style.display = 'block';
     
     const resultItem = document.createElement('div');
