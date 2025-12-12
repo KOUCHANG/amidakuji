@@ -1,0 +1,49 @@
+name: Update Version Info
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-version:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 完全な履歴を取得
+      
+      - name: Update version info
+        run: |
+          # 最新のコミット情報を取得
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          COMMIT_DATE=$(git log -1 --format="%ci")
+          VERSION=$(date -u +"%Y.%m.%d-%H%M")
+          
+          echo "Updating version info..."
+          echo "Version: ${VERSION}"
+          echo "Commit: ${COMMIT_HASH}"
+          echo "Date: ${COMMIT_DATE}"
+          
+          # script.jsのバージョン情報を更新
+          sed -i "s|// Version: .*|// Version: ${VERSION}|" script.js
+          sed -i "s|// Build Date: .*|// Build Date: ${COMMIT_DATE}|" script.js
+          sed -i "s|// Commit: .*|// Commit: ${COMMIT_HASH}|" script.js
+          
+      - name: Check if changes exist
+        id: check_changes
+        run: |
+          git diff --quiet script.js || echo "changed=true" >> $GITHUB_OUTPUT
+      
+      - name: Commit and push changes
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config user.name "KOUCHANG"
+          git config user.email "grasshopper.like.ant@gmail.com"
+          git add script.js
+          git commit -m "chore: auto-update version info [skip ci]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

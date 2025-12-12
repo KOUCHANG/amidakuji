@@ -34,15 +34,25 @@ open index.html
 
 ## デプロイ
 
-変更をデプロイする際は、バージョン情報を更新してからコミットしてください:
+変更をmainブランチにプッシュすると、GitHub Actionsが自動的にバージョン情報を更新します:
 
 ```bash
-# バージョン情報を更新
-./update-version.sh
-
 # 変更をコミット＆プッシュ
 git add -A
-git commit -m "Update version and deploy changes"
+git commit -m "Add new feature"
+git push origin main
+```
+
+プッシュ後、GitHub Actionsが自動的に:
+1. 最新のコミットハッシュを取得
+2. script.jsのバージョン情報を更新
+3. 自動的にコミット＆プッシュ
+
+手動でバージョン更新したい場合:
+```bash
+./update-version.sh
+git add script.js
+git commit -m "Update version manually"
 git push origin main
 ```
 
