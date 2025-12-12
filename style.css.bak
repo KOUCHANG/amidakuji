@@ -1,0 +1,304 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    max-width: 1200px;
+    width: 100%;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 2.5em;
+}
+
+.main-content {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.left-panel {
+    flex: 0 0 350px;
+    min-width: 300px;
+}
+
+.right-panel {
+    flex: 1;
+    min-width: 400px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #555;
+    font-weight: bold;
+}
+
+.input-group input,
+.input-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-toggle {
+    background: #667eea;
+    color: white;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-toggle:hover {
+    background: #5568d3;
+}
+
+.input-panel {
+    display: block;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.amidakuji-container {
+    overflow-x: auto;
+    margin: 20px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.name-inputs {
+    display: flex;
+    gap: 0;
+    margin: 10px 0;
+    justify-content: flex-start;
+}
+
+.name-input {
+    padding: 8px 4px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s;
+    background: white;
+    width: 120px; /* 縦線の間隔と同じ */
+    cursor: pointer;
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    cursor: text;
+}
+
+.name-input:hover:not(:focus) {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.name-input.participant {
+    color: #2c3e50;
+}
+
+.name-input.result {
+    color: #27ae60;
+}
+
+canvas {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+}
+
+.results-display {
+    margin-top: 30px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    display: none;
+}
+
+.result-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.result-item strong {
+    color: #667eea;
+}
+
+.result-mode-info {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(39, 174, 96, 0.2) 100%);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px dashed #27ae60;
+}
+
+.result-mode-info p {
+    margin: 0;
+    color: #27ae60;
+    font-weight: bold;
+}
+
+.add-mode-info {
+    text-align: center;
+    padding: 15px;
+    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.2) 100%);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border: 2px dashed #ff6b6b;
+}
+
+.add-mode-info p {
+    margin: 0;
+    color: #ff6b6b;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+    
+    .main-content {
+        flex-direction: column;
+    }
+    
+    .left-panel {
+        flex: 1;
+        width: 100%;
+    }
+    
+    .right-panel {
+        flex: 1;
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .controls {
+        flex-direction: column;
+    }
+    
+    .btn {
+        width: 100%;
+    }
+    
+    .input-panel {
+        display: none; /* スマホではデフォルトで非表示 */
+    }
+    
+    .amidakuji-container {
+        width: 100%;
+        overflow-x: auto;
+    }
+    
+    .name-inputs {
+        padding-left: 20px;
+        overflow-x: visible;
+    }
+    
+    .name-input {
+        width: 60px;
+        font-size: 11px;
+        padding: 6px 2px;
+    }
+    
+    canvas {
+        max-width: 100%;
+        height: auto;
+    }
+}
