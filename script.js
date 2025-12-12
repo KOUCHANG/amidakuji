@@ -90,6 +90,7 @@ function createNameInputs() {
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'name-input participant';
+        input.id = `participant-${index}`; // idを追加
         input.value = name;
         input.style.width = config.verticalSpacing + 'px';
         input.style.marginLeft = (index === 0 ? 0 : 0) + 'px';
@@ -99,7 +100,7 @@ function createNameInputs() {
         // 結果モードの時だけクリックで道順アニメーション
         input.addEventListener('click', () => {
             if (resultViewMode && !addLineMode) {
-                tracePathWithAnimation(index, false); // 結果を表示しない
+                tracePathWithAnimation(index, false); // 結果は既に表示済み
             }
         });
         participantInputsDiv.appendChild(input);
@@ -389,7 +390,7 @@ function displayResult(startIndex, endIndex) {
     ctx.fillText(results[endIndex], x, canvas.height - config.padding + 30);
 }
 
-function revealAll() {
+function showAllResults() {
     const resultsDisplay = document.getElementById('resultsDisplay');
     resultsDisplay.innerHTML = '';
     resultsDisplay.style.display = 'block';
@@ -432,14 +433,34 @@ function toggleResultMode() {
         if (addLineMode) {
             toggleAddLineMode();
         }
+        // 参加者入力欄を読み取り専用に
+        for (let i = 0; i < participants.length; i++) {
+            const input = document.getElementById(`participant-${i}`);
+            if (input) {
+                input.readOnly = true;
+                input.style.cursor = 'pointer';
+                input.style.backgroundColor = '#f8f9fa';
+            }
+        }
+        // 結果を表示（revealAllと同じ処理）
+        showAllResults();
     } else {
         btn.textContent = '結果モード';
-        btn.style.cssText = 'background: #6c757d; color: white;';
+        btn.style.cssText = 'background: #667eea; color: white;';
         info.style.display = 'none';
+        // 参加者入力欄を編集可能に
+        for (let i = 0; i < participants.length; i++) {
+            const input = document.getElementById(`participant-${i}`);
+            if (input) {
+                input.readOnly = false;
+                input.style.cursor = 'text';
+                input.style.backgroundColor = 'white';
+            }
+        }
         // 結果表示をクリア
         document.getElementById('resultsDisplay').innerHTML = '';
         document.getElementById('resultsDisplay').style.display = 'none';
-        drawAmidakuji(); // 再描画してハイライトをクリア
+        drawAmidakuji(); // 再描画して結果をクリア
     }
 }
 
