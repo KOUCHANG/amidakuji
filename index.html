@@ -8,10 +8,10 @@
 </head>
 <body>
     <!-- 設定ボタン -->
-    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    <button class="settings-btn" id="settingsBtn" onclick="openSettings()" style="display: none;">⚙️</button>
     
     <!-- メインコンテンツ -->
-    <div class="main-container">
+    <div class="main-container" id="mainContainer" style="display: none;">
         <h1>🎯 あみだくじ</h1>
         
         <!-- あみだくじ表示エリア -->
@@ -38,16 +38,16 @@
     </div>
     
     <!-- オーバーレイモーダル -->
-    <div class="modal-overlay" id="settingsModal" onclick="closeSettings(event)">
+    <div class="modal-overlay active" id="settingsModal" onclick="closeSettings(event)">
         <div class="modal-content" onclick="event.stopPropagation()">
             <div class="modal-header">
-                <h2>結果/景品の設定</h2>
-                <button class="close-btn" onclick="closeSettings()">&times;</button>
+                <h2 id="modalTitle">あみだくじを作成</h2>
+                <button class="close-btn" id="closeModalBtn" onclick="closeSettings()" style="display: none;">&times;</button>
             </div>
             <div class="modal-body">
                 <label>結果/景品（1行に1つ）:</label>
                 <textarea id="results" rows="8" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
-                <button class="btn btn-primary" onclick="updateAmidakuji()">あみだくじを更新</button>
+                <button class="btn btn-primary" id="createBtn" onclick="updateAmidakuji()">あみだくじを作成</button>
             </div>
         </div>
     </div>
