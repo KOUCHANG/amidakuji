@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1137',
-    buildDate: '2025-12-12 20:37:42 +0900',
-    commit: '2854532'
+    version: '2025.12.12-1140',
+    buildDate: '2025-12-12 20:40:35 +0900',
+    commit: 'bf16f6e'
 };
 
 let participants = [];
@@ -15,18 +15,18 @@ let addablePositions = [];
 let resultViewMode = false; // 結果モード：道順を見るモード
 let currentBackgroundColor = null; // 現在の背景色を記録
 
-// 識別しやすい背景色のパレット
+// 識別しやすい背景色のパレット（グラデーション用の色ペア）
 const backgroundColors = [
-    '#e3f2fd', // ライトブルー
-    '#f1f8e9', // ライトグリーン
-    '#fff3e0', // ライトオレンジ
-    '#fce4ec', // ライトピンク
-    '#f3e5f5', // ライトパープル
-    '#e0f2f1', // ライトシアン
-    '#fff9c4', // ライトイエロー
-    '#ffe0b2', // ライトディープオレンジ
-    '#e1bee7', // ライトディープパープル
-    '#c5cae9'  // ライトインディゴ
+    ['#667eea', '#764ba2'], // パープル（デフォルト）
+    ['#f093fb', '#f5576c'], // ピンク→レッド
+    ['#4facfe', '#00f2fe'], // ブルー
+    ['#43e97b', '#38f9d7'], // グリーン→シアン
+    ['#fa709a', '#fee140'], // ピンク→イエロー
+    ['#30cfd0', '#330867'], // シアン→ディープパープル
+    ['#a8edea', '#fed6e3'], // ライトシアン→ライトピンク
+    ['#ff9a56', '#fecb6e'], // オレンジ
+    ['#ff6e7f', '#bfe9ff'], // レッド→ライトブルー
+    ['#ffecd2', '#fcb69f']  // クリーム→オレンジ
 ];
 
 let config = {
@@ -721,22 +721,24 @@ function resetAmidakuji() {
 }
 // 背景色をランダムに変更（前回と異なる色を選択）
 function changeBackgroundColor() {
-    let newColor;
+    let newColorPair;
     let availableColors = backgroundColors;
     
     // 前回の色がある場合、それを除外
     if (currentBackgroundColor) {
-        availableColors = backgroundColors.filter(color => color !== currentBackgroundColor);
+        availableColors = backgroundColors.filter(colorPair => 
+            colorPair[0] !== currentBackgroundColor[0] || colorPair[1] !== currentBackgroundColor[1]
+        );
     }
     
-    // ランダムに色を選択
-    newColor = availableColors[Math.floor(Math.random() * availableColors.length)];
+    // ランダムに色ペアを選択
+    newColorPair = availableColors[Math.floor(Math.random() * availableColors.length)];
     
-    // 背景色を適用
-    document.body.style.backgroundColor = newColor;
+    // グラデーション背景を適用
+    document.body.style.background = `linear-gradient(135deg, ${newColorPair[0]} 0%, ${newColorPair[1]} 100%)`;
     
     // 現在の色を記録
-    currentBackgroundColor = newColor;
+    currentBackgroundColor = newColorPair;
     
-    console.log(`%c背景色変更: ${newColor}`, `background: ${newColor}; padding: 5px; border-radius: 3px;`);
+    console.log(`%c背景色変更: ${newColorPair[0]} → ${newColorPair[1]}`, `background: linear-gradient(90deg, ${newColorPair[0]}, ${newColorPair[1]}); padding: 5px; border-radius: 3px; color: white;`);
 }
