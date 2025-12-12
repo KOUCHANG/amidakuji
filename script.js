@@ -87,10 +87,12 @@ function calculateAddablePositions() {
     const numPaths = participants.length;
     const totalHeight = canvas.height - config.padding * 2;
     const spacing = 50; // 等間隔の間隔(ピクセル)
+    const offset = spacing / 2; // 偶数列のオフセット
     
-    // 等間隔で追加可能位置を計算
-    for (let y = config.padding + spacing; y < canvas.height - config.padding; y += spacing) {
-        for (let col = 0; col < numPaths - 1; col++) {
+    // 列ごとに等間隔で追加可能位置を計算（奇数列と偶数列でずらす）
+    for (let col = 0; col < numPaths - 1; col++) {
+        const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
+        for (let y = startY; y < canvas.height - config.padding; y += spacing) {
             addablePositions.push({ y, column: col, id: addablePositions.length });
         }
     }
