@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0323',
-    buildDate: '2025-12-12 12:23:31 +0900',
-    commit: '4cbdca0'
+    version: '2025.12.12-0349',
+    buildDate: '2025-12-12 12:49:28 +0900',
+    commit: 'c4cacb1'
 };
 
 let participants = [];
