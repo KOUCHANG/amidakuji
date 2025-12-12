@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0435',
-    buildDate: '2025-12-12 13:35:49 +0900',
-    commit: 'c1ee03e'
+    version: '2025.12.12-0438',
+    buildDate: '2025-12-12 13:38:47 +0900',
+    commit: '0d15531'
 };
 
 let participants = [];
@@ -205,19 +205,30 @@ function calculateAddablePositions() {
     const spacing = 50; // 等間隔の間隔(ピクセル)
     const offset = spacing / 2; // 偶数列のオフセット
     
-    // 既存の横線の最大Y座標を取得
-    let maxLineY = config.padding;
-    if (horizontalLines.length > 0) {
-        maxLineY = Math.max(...horizontalLines.map(line => line.y));
+    // まず仮の追加可能位置を生成して、現在表示される最下部の位置を見つける
+    let tempPositions = [];
+    for (let col = 0; col < numPaths - 1; col++) {
+        const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
+        for (let y = startY; y < config.padding + 500; y += spacing) {
+            const tooClose = horizontalLines.some(line => 
+                Math.abs(line.y - y) < 25 && line.column === col
+            );
+            if (!tooClose) {
+                tempPositions.push({ y, column: col });
+            }
+        }
     }
     
-    // 最低でも既存の線より下にスペースを確保
-    const minHeight = Math.max(
-        maxLineY + spacing * 3, // 既存の線の下に3段分確保
-        400 // 最小の高さ
-    );
+    // 現在表示される最下部の位置を取得
+    let maxVisibleY = config.padding;
+    if (tempPositions.length > 0) {
+        maxVisibleY = Math.max(...tempPositions.map(pos => pos.y));
+    }
     
-    // 列ごとに等間隔で追加可能位置を計算（奇数列と偶数列でずらす）
+    // 最下部より下にさらにスペースを確保
+    const minHeight = maxVisibleY + spacing * 4;
+    
+    // 正式な追加可能位置を生成
     for (let col = 0; col < numPaths - 1; col++) {
         const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
         for (let y = startY; y < minHeight; y += spacing) {
