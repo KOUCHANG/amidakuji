@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>あみだくじ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 あみだくじ</h1>
+        
+        <div class="setup-section" id="setupSection">
+            <div class="input-group">
+                <label>参加者の名前（1行に1人、またはスペース区切り）:</label>
+                <textarea id="participants" rows="4" placeholder="太郎&#10;花子&#10;次郎&#10;美咲"></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>結果/景品（1行に1つ、またはスペース区切り）:</label>
+                <textarea id="results" rows="4" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label>初期の横線の数:</label>
+                <input type="number" id="lineCount" value="0" min="0" max="30">
+                <small style="color: #888; display: block; margin-top: 5px;">※0にすると、後から好きな場所に線を追加できます</small>
+            </div>
+            
+            <button class="btn btn-primary" onclick="generateAmidakuji()">あみだくじを生成</button>
+        </div>
+        
+        <div class="game-section" id="gameSection" style="display: none;">
+            <div class="controls">
+                <button class="btn btn-secondary" onclick="resetGame()">最初から</button>
+                <button class="btn btn-secondary" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>
+                <button class="btn btn-primary" onclick="revealAll()">すべて表示</button>
+            </div>
+            
+            <div id="addModeInfo" class="add-mode-info" style="display: none;">
+                <p>📍 数字をクリックして横線を追加してください</p>
+            </div>
+            
+            <div class="amidakuji-container">
+                <canvas id="amidakujiCanvas"></canvas>
+            </div>
+            
+            <div class="results-display" id="resultsDisplay"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
