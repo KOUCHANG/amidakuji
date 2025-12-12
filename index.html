@@ -16,7 +16,10 @@
         
         <!-- あみだくじ表示エリア -->
         <div class="amidakuji-wrapper">
-            <div id="participantInputs" class="name-inputs"></div>
+            <div class="participant-input-area">
+                <label for="participantNames">参加者名（1行に1人）:</label>
+                <textarea id="participantNames" rows="3" placeholder="田中太郎&#10;佐藤花子&#10;鈴木一郎&#10;高橋次郎"></textarea>
+            </div>
             <canvas id="amidakujiCanvas"></canvas>
         </div>
         
