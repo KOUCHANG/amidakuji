@@ -11,7 +11,7 @@ let horizontalLines = [];
 let canvas, ctx;
 let addLineMode = false;
 let addablePositions = [];
-let showResultMode = false; // 結果を表示するかどうか
+let resultViewMode = false; // 結果モード：道順を見るモード
 let config = {
     lineWidth: 3,
     verticalLineColor: '#333',
@@ -96,9 +96,9 @@ function createNameInputs() {
         input.addEventListener('input', (e) => {
             participants[index] = e.target.value;
         });
-        // クリックで道順のみアニメーション（結果は表示しない）
+        // 結果モードの時だけクリックで道順アニメーション
         input.addEventListener('click', () => {
-            if (!addLineMode) {
+            if (resultViewMode && !addLineMode) {
                 tracePathWithAnimation(index, false); // 結果を表示しない
             }
         });
@@ -419,6 +419,30 @@ function revealAll() {
     }
 }
 
+function toggleResultMode() {
+    resultViewMode = !resultViewMode;
+    const btn = document.getElementById('toggleResultMode');
+    const info = document.getElementById('resultModeInfo');
+    
+    if (resultViewMode) {
+        btn.textContent = '結果モード中...';
+        btn.style.cssText = 'background: #27ae60 !important; color: white;';
+        info.style.display = 'block';
+        // 他のモードを解除
+        if (addLineMode) {
+            toggleAddLineMode();
+        }
+    } else {
+        btn.textContent = '結果モード';
+        btn.style.cssText = 'background: #6c757d; color: white;';
+        info.style.display = 'none';
+        // 結果表示をクリア
+        document.getElementById('resultsDisplay').innerHTML = '';
+        document.getElementById('resultsDisplay').style.display = 'none';
+        drawAmidakuji(); // 再描画してハイライトをクリア
+    }
+}
+
 function toggleAddLineMode() {
     addLineMode = !addLineMode;
     const btn = document.getElementById('toggleAddMode');
@@ -429,6 +453,10 @@ function toggleAddLineMode() {
         btn.style.cssText = 'background: #ff6b6b !important; color: white;';
         info.style.display = 'block';
         canvas.style.cursor = 'pointer';
+        // 結果モードを解除
+        if (resultViewMode) {
+            toggleResultMode();
+        }
     } else {
         btn.textContent = '線を追加';
         btn.style.cssText = 'background: #6c757d; color: white;';
