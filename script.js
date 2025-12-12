@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0225',
-    buildDate: '2025-12-12 11:25:39 +0900',
-    commit: '32d879a'
+    version: '2025.12.12-0228',
+    buildDate: '2025-12-12 11:28:05 +0900',
+    commit: '9d9a4db'
 };
 
 let participants = [];
@@ -66,10 +66,6 @@ function updateAmidakuji() {
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
     
-    // 結果表示をクリア
-    document.getElementById('resultsDisplay').innerHTML = '';
-    document.getElementById('resultsDisplay').style.display = 'none';
-    
     createNameInputs();
     drawAmidakuji();
 }
@@ -109,8 +105,6 @@ function createNameInputs() {
 
 function clearLines() {
     horizontalLines = [];
-    document.getElementById('resultsDisplay').innerHTML = '';
-    document.getElementById('resultsDisplay').style.display = 'none';
     drawAmidakuji();
 }
 
@@ -371,18 +365,7 @@ function tracePath(startColumn) {
 }
 
 function displayResult(startIndex, endIndex) {
-    const resultsDisplay = document.getElementById('resultsDisplay');
-    // 既存の結果をクリア
-    resultsDisplay.innerHTML = '';
-    resultsDisplay.style.display = 'block';
-    
-    const resultItem = document.createElement('div');
-    resultItem.className = 'result-item';
-    resultItem.innerHTML = `<strong>${participants[startIndex]}</strong> → ${results[endIndex]}`;
-    
-    resultsDisplay.appendChild(resultItem);
-    
-    // 結果をキャンバスにも表示
+    // 結果をキャンバスに表示
     ctx.font = 'bold 16px sans-serif';
     ctx.fillStyle = config.resultColor;
     ctx.textAlign = 'center';
