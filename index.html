@@ -12,12 +12,15 @@
         
         <div class="main-content">
             <div class="left-panel">
-                <div class="input-group">
-                    <label>結果/景品（1行に1つ、またはスペース区切り）:</label>
-                    <textarea id="results" rows="6" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
+                <button class="btn btn-toggle" onclick="toggleInputPanel()">結果/景品を入力 ▼</button>
+                <div id="inputPanel" class="input-panel">
+                    <div class="input-group">
+                        <label>結果/景品（1行に1つ、またはスペース区切り）:</label>
+                        <textarea id="results" rows="6" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="updateAmidakuji()">あみだくじを更新</button>
                 </div>
-                
-                <button class="btn btn-primary" onclick="updateAmidakuji()">あみだくじを更新</button>
                 
                 <div class="controls" style="margin-top: 20px;">
                     <button class="btn btn-secondary" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>

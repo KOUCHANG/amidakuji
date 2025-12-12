@@ -11,6 +11,7 @@ let horizontalLines = [];
 let canvas, ctx;
 let addLineMode = false;
 let addablePositions = [];
+let showResultMode = false; // 結果を表示するかどうか
 let config = {
     lineWidth: 3,
     verticalLineColor: '#333',
@@ -78,18 +79,27 @@ function createNameInputs() {
     
     // 参加者名の入力欄を作成
     participantInputsDiv.innerHTML = '';
+    
+    // コンテナのスタイルを設定
+    participantInputsDiv.style.display = 'flex';
+    participantInputsDiv.style.justifyContent = 'flex-start';
+    participantInputsDiv.style.paddingLeft = config.padding + 'px';
+    participantInputsDiv.style.gap = '0';
+    
     participants.forEach((name, index) => {
         const input = document.createElement('input');
         input.type = 'text';
         input.className = 'name-input participant';
         input.value = name;
+        input.style.width = config.verticalSpacing + 'px';
+        input.style.marginLeft = (index === 0 ? 0 : 0) + 'px';
         input.addEventListener('input', (e) => {
             participants[index] = e.target.value;
         });
-        // クリックでアニメーション
+        // クリックで道順のみアニメーション（結果は表示しない）
         input.addEventListener('click', () => {
             if (!addLineMode) {
-                tracePathWithAnimation(index);
+                tracePathWithAnimation(index, false); // 結果を表示しない
             }
         });
         participantInputsDiv.appendChild(input);
@@ -423,4 +433,17 @@ function toggleAddLineMode() {
     }
     
     drawAmidakuji();
+}
+
+function toggleInputPanel() {
+    const panel = document.getElementById('inputPanel');
+    const btn = event.target;
+    
+    if (panel.style.display === 'none') {
+        panel.style.display = 'block';
+        btn.innerHTML = '結果/景品を入力 ▲';
+    } else {
+        panel.style.display = 'none';
+        btn.innerHTML = '結果/景品を入力 ▼';
+    }
 }
