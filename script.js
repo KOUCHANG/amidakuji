@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0228',
-    buildDate: '2025-12-12 11:28:05 +0900',
-    commit: '9d9a4db'
+    version: '2025.12.12-0231',
+    buildDate: '2025-12-12 11:31:04 +0900',
+    commit: '2eec4bd'
 };
 
 let participants = [];
@@ -205,6 +205,11 @@ function drawAmidakuji() {
     // 追加モードの場合、追加可能な位置に数字を表示
     if (addLineMode) {
         drawAddablePositions();
+    }
+    
+    // 結果モード中は結果を表示
+    if (resultViewMode) {
+        showAllResults();
     }
     
     // クリックイベントを追加
