@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0248',
-    buildDate: '2025-12-12 11:48:17 +0900',
-    commit: '7deab3f'
+    version: '2025.12.12-0301',
+    buildDate: '2025-12-12 12:01:30 +0900',
+    commit: '7b082bf'
 };
 
 let participants = [];
@@ -66,59 +66,73 @@ function updateAmidakuji() {
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
     
-    createNameInputs();
+    // 参加者名テキストエリアを更新
+    const participantNamesTextarea = document.getElementById('participantNames');
+    if (participantNamesTextarea) {
+        participantNamesTextarea.value = participants.join('\n');
+    }
+    
     drawAmidakuji();
     
     // モーダルを閉じる
     closeSettings();
 }
 
-function createNameInputs() {
-    const participantInputsDiv = document.getElementById('participantInputs');
+// 参加者名をテキストエリアから読み取り
+ function updateParticipantsFromTextarea() {
+    const textarea = document.getElementById('participantNames');
+    if (!textarea) return;
     
-    // 参加者名の入力欄を作成
-    participantInputsDiv.innerHTML = '';
+    const names = textarea.value.split('\n').map(n => n.trim()).filter(n => n);
     
-    // コンテナのスタイルを設定
-    participantInputsDiv.style.display = 'flex';
-    participantInputsDiv.style.justifyContent = 'flex-start';
-    participantInputsDiv.style.paddingLeft = config.padding + 'px';
-    participantInputsDiv.style.gap = '0';
-    
-    participants.forEach((name, index) => {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'name-input participant';
-        input.id = `participant-${index}`; // idを追加
-        // 名前が長い場合は頭文字と番号、短い場合はそのまま表示
-        const displayName = name.length > 4 ? (name.charAt(0) + (index + 1)) : name;
-        input.value = displayName;
-        input.dataset.fullName = name; // フルネームを保持
-        input.style.width = config.verticalSpacing + 'px';
-        input.style.marginLeft = (index === 0 ? 0 : 0) + 'px';
-        input.addEventListener('input', (e) => {
-            // フルネームを更新
-            participants[index] = e.target.value;
-            e.target.dataset.fullName = e.target.value;
-        });
-        input.addEventListener('blur', (e) => {
-            // フォーカスが外れたら省略表示に戻す
-            const fullName = e.target.dataset.fullName;
-            const shortName = fullName.length > 4 ? (fullName.charAt(0) + (index + 1)) : fullName;
-            e.target.value = shortName;
-        });
-        input.addEventListener('focus', (e) => {
-            // フォーカス時はフルネームを表示
-            e.target.value = e.target.dataset.fullName;
-        });
-        // 結果モードの時だけクリックで道順アニメーション
-        input.addEventListener('click', () => {
-            if (resultViewMode && !addLineMode) {
-                tracePathWithAnimation(index, false); // 結果は既に表示済み
+    // 結果の数と合わせる
+    if (results.length > 0) {
+        const targetCount = results.length;
+        if (names.length < targetCount) {
+            // 不足分を追加
+            for (let i = names.length; i < targetCount; i++) {
+                names.push(`参加者${i + 1}`);
             }
-        });
-        participantInputsDiv.appendChild(input);
-    });
+        } else if (names.length > targetCount) {
+            // 余分を削除
+            names.length = targetCount;
+        }
+    }
+    
+    participants = names;
+    drawAmidakuji();
+}
+
+// テキストエリアにイベントリスナを追加
+function initParticipantInput() {
+    const textarea = document.getElementById('participantNames');
+    if (textarea) {
+        textarea.addEventListener('input', updateParticipantsFromTextarea);
+    }
+}
+
+// Canvasのイベントリスナを初期化
+function initCanvasEvents() {
+    const canvas = document.getElementById('amidakujiCanvas');
+    if (canvas) {
+        // クリックイベント
+        canvas.addEventListener('click', handleCanvasClick);
+        
+        // タッチイベント
+        canvas.addEventListener('touchstart', handleCanvasTouch, { passive: false });
+        
+        console.log('Canvas events initialized');
+    }
+}
+
+// ページ読み込み時に初期化
+window.addEventListener('DOMContentLoaded', () => {
+    initParticipantInput();
+    initCanvasEvents();
+});
+
+function createNameInputs() {
+    // 何もしない（互換性のために関数を残す）
 }
 
 function clearLines() {
@@ -193,6 +207,19 @@ function drawAmidakuji() {
     
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
+    // 参加者名を上部に描画
+    ctx.font = 'bold 14px sans-serif';
+    ctx.fillStyle = config.participantColor;
+    ctx.textAlign = 'center';
+    
+    for (let i = 0; i < numPaths; i++) {
+        const x = config.padding + i * config.verticalSpacing;
+        const name = participants[i] || `参加者${i + 1}`;
+        // 名前が長い場合は省略
+        const displayName = name.length > 5 ? name.substring(0, 4) + '...' : name;
+        ctx.fillText(displayName, x, config.padding - 15);
+    }
+    
     // 縦線を描画
     ctx.strokeStyle = config.verticalLineColor;
     ctx.lineWidth = config.lineWidth;
@@ -229,10 +256,6 @@ function drawAmidakuji() {
     if (resultViewMode) {
         showAllResults();
     }
-    
-    // クリックイベントとタッチイベントを追加
-    canvas.onclick = handleCanvasClick;
-    canvas.ontouchend = handleCanvasTouch;
 }
 
 function drawAddablePositions() {
@@ -268,20 +291,30 @@ function drawAddablePositions() {
 }
 
 function handleCanvasClick(event) {
+    const canvas = document.getElementById('amidakujiCanvas');
     const rect = canvas.getBoundingClientRect();
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (event.clientX - rect.left) * scaleX;
+    const y = (event.clientY - rect.top) * scaleY;
     
+    console.log('Click detected at:', x, y); // デバッグ用
     processCanvasInteraction(x, y);
 }
 
 function handleCanvasTouch(event) {
     event.preventDefault();
-    const rect = canvas.getBoundingClientRect();
-    const touch = event.changedTouches[0];
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
+    event.stopPropagation();
     
+    const canvas = document.getElementById('amidakujiCanvas');
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const touch = event.touches[0] || event.changedTouches[0];
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
+    
+    console.log('Touch detected at:', x, y); // デバッグ用
     processCanvasInteraction(x, y);
 }
 
@@ -443,15 +476,6 @@ function toggleResultMode() {
         if (addLineMode) {
             toggleAddLineMode();
         }
-        // 参加者入力欄を読み取り専用に
-        for (let i = 0; i < participants.length; i++) {
-            const input = document.getElementById(`participant-${i}`);
-            if (input) {
-                input.readOnly = true;
-                input.style.cursor = 'pointer';
-                input.style.backgroundColor = '#f8f9fa';
-            }
-        }
         // 結果を表示（revealAllと同じ処理）
         showAllResults();
     } else {
@@ -460,15 +484,7 @@ function toggleResultMode() {
         info.style.display = 'none';
         // ボタンを表示
         createModeButtons.style.display = 'flex';
-        // 参加者入力欄を編集可能に
-        for (let i = 0; i < participants.length; i++) {
-            const input = document.getElementById(`participant-${i}`);
-            if (input) {
-                input.readOnly = false;
-                input.style.cursor = 'text';
-                input.style.backgroundColor = 'white';
-            }
-        }
+
         // キャンバスを再描画して結果をクリア
         drawAmidakuji();
     }
