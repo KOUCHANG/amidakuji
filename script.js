@@ -206,13 +206,30 @@ function calculateAddablePositions() {
     const spacing = 50; // 等間隔の間隔(ピクセル)
     const offset = spacing / 2; // 偶数列のオフセット
     
-    // 列ごとに等間隔で追加可能位置を計算（奇数列と偶数列でずらす）
+    // まず全ての位置を生成（idは後で振り直す）
+    let tempPositions = [];
     for (let col = 0; col < numPaths - 1; col++) {
         const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
         for (let y = startY; y < canvas.height - config.padding; y += spacing) {
-            addablePositions.push({ y, column: col, id: addablePositions.length });
+            tempPositions.push({ y, column: col });
         }
     }
+    
+    // y座標（段）でソートしてから、同じ段内では列でソート
+    tempPositions.sort((a, b) => {
+        if (Math.abs(a.y - b.y) < spacing / 2) {
+            // 同じ段（y座標が近い）の場合は列順
+            return a.column - b.column;
+        }
+        // 異なる段の場合はy座標順
+        return a.y - b.y;
+    });
+    
+    // ソート後にidを振り直す（横から順に番号が振られる）
+    addablePositions = tempPositions.map((pos, index) => ({
+        ...pos,
+        id: index
+    }));
 }
 
 function drawAmidakuji() {
