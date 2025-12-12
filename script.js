@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0222',
-    buildDate: '2025-12-12 11:21:57 +0900',
-    commit: '1fb9c34'
+    version: '2025.12.12-0225',
+    buildDate: '2025-12-12 11:25:39 +0900',
+    commit: '32d879a'
 };
 
 let participants = [];
@@ -391,23 +391,7 @@ function displayResult(startIndex, endIndex) {
 }
 
 function showAllResults() {
-    const resultsDisplay = document.getElementById('resultsDisplay');
-    resultsDisplay.innerHTML = '';
-    resultsDisplay.style.display = 'block';
-    
-    for (let i = 0; i < participants.length; i++) {
-        const path = tracePath(i);
-        const endIndex = path[path.length - 1].column;
-        
-        const resultItem = document.createElement('div');
-        resultItem.className = 'result-item';
-        resultItem.innerHTML = `<strong>${participants[i]}</strong> → ${results[endIndex]}`;
-        resultItem.style.animationDelay = `${i * 0.1}s`;
-        
-        resultsDisplay.appendChild(resultItem);
-    }
-    
-    // すべての結果をキャンバスに表示
+    // キャンバスに結果を表示（左下の一覧は表示しない）
     ctx.font = 'bold 16px sans-serif';
     ctx.fillStyle = config.resultColor;
     ctx.textAlign = 'center';
@@ -457,10 +441,8 @@ function toggleResultMode() {
                 input.style.backgroundColor = 'white';
             }
         }
-        // 結果表示をクリア
-        document.getElementById('resultsDisplay').innerHTML = '';
-        document.getElementById('resultsDisplay').style.display = 'none';
-        drawAmidakuji(); // 再描画して結果をクリア
+        // キャンバスを再描画して結果をクリア
+        drawAmidakuji();
     }
 }
 

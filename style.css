@@ -246,11 +246,12 @@ canvas {
 
 @media (max-width: 768px) {
     .container {
-        padding: 20px;
+        padding: 10px;
     }
     
     h1 {
-        font-size: 2em;
+        font-size: 1.5em;
+        margin-bottom: 15px;
     }
     
     .main-content {
@@ -265,6 +266,7 @@ canvas {
     .right-panel {
         flex: 1;
         width: 100%;
+        overflow-x: auto;
     }
     
     .controls {
@@ -279,13 +281,24 @@ canvas {
         display: none; /* スマホではデフォルトで非表示 */
     }
     
-    .name-inputs {
-        padding: 0 20px; /* スマホでは余白を減らす */
+    .amidakuji-container {
+        width: 100%;
         overflow-x: auto;
     }
     
+    .name-inputs {
+        padding-left: 20px;
+        overflow-x: visible;
+    }
+    
     .name-input {
-        width: 80px; /* スマホでは少し狭く */
-        font-size: 12px;
+        width: 60px;
+        font-size: 11px;
+        padding: 6px 2px;
+    }
+    
+    canvas {
+        max-width: 100%;
+        height: auto;
     }
 }
