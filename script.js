@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0318',
-    buildDate: '2025-12-12 12:18:24 +0900',
-    commit: '8189bbe'
+    version: '2025.12.12-0323',
+    buildDate: '2025-12-12 12:23:31 +0900',
+    commit: '4cbdca0'
 };
 
 let participants = [];
@@ -351,11 +351,11 @@ function checkIfInteractionNeeded(x, y) {
         }
     }
     
-    // 結果モードの場合、参加者の位置近くかチェック
+    // 結果モードの場合、参加者名の位置近くかチェック
     if (resultViewMode) {
         for (let i = 0; i < participants.length; i++) {
             const pathX = config.padding + i * config.verticalSpacing;
-            if (Math.abs(x - pathX) < 30 && y < config.padding + 50) {
+            if (Math.abs(x - pathX) < 40 && y < config.padding + 20) {
                 return true;
             }
         }
@@ -385,6 +385,18 @@ function processCanvasInteraction(x, y) {
                     horizontalLines.sort((a, b) => a.y - b.y);
                     drawAmidakuji();
                 }
+                return;
+            }
+        }
+    }
+    
+    // 結果モードの場合、参加者名をクリックして道順表示
+    if (resultViewMode) {
+        for (let i = 0; i < participants.length; i++) {
+            const pathX = config.padding + i * config.verticalSpacing;
+            // 名前の位置付近（上部）をクリックしたかチェック
+            if (Math.abs(x - pathX) < 40 && y < config.padding + 20) {
+                tracePathWithAnimation(i, false);
                 return;
             }
         }
