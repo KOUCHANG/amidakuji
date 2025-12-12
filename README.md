@@ -32,6 +32,22 @@ cd amidakuji
 open index.html
 ```
 
+## デプロイ
+
+変更をデプロイする際は、バージョン情報を更新してからコミットしてください:
+
+```bash
+# バージョン情報を更新
+./update-version.sh
+
+# 変更をコミット＆プッシュ
+git add -A
+git commit -m "Update version and deploy changes"
+git push origin main
+```
+
+ブラウザのコンソール（F12）でバージョン情報を確認できます。
+
 ## 技術スタック
 
 - HTML5
