@@ -31,33 +31,35 @@ console.log(`%cBuild Date: ${BUILD_INFO.buildDate}`, 'color: #27ae60;');
 console.log(`%cCommit: ${BUILD_INFO.commit}`, 'color: #27ae60;');
 
 function updateAmidakuji() {
-    const participantInput = document.getElementById('participants').value.trim();
     const resultInput = document.getElementById('results').value.trim();
     
-    if (!participantInput || !resultInput) {
-        alert('参加者と結果を入力してください。');
+    if (!resultInput) {
+        alert('結果/景品を入力してください。');
         return;
     }
     
     // 改行区切りをメインとし、1行のみの場合はスペース区切りも試す
-    participants = participantInput.split('\n').map(p => p.trim()).filter(p => p);
-    if (participants.length === 1 && participants[0].includes(' ')) {
-        participants = participants[0].split(/\s+/).filter(p => p);
-    }
-    
     results = resultInput.split('\n').map(r => r.trim()).filter(r => r);
     if (results.length === 1 && results[0].includes(' ')) {
         results = results[0].split(/\s+/).filter(r => r);
     }
     
-    if (participants.length !== results.length) {
-        alert('参加者と結果の数を同じにしてください。');
+    if (results.length < 2) {
+        alert('結果は2つ以上必要です。');
         return;
     }
     
-    if (participants.length < 2) {
-        alert('参加者は2人以上必要です。');
-        return;
+    // 参加者数を結果の数に合わせる
+    const numParticipants = results.length;
+    
+    // 既存の参加者名を保持しつつ、不足分は追加
+    if (participants.length < numParticipants) {
+        for (let i = participants.length; i < numParticipants; i++) {
+            participants.push(`参加者${i + 1}`);
+        }
+    } else if (participants.length > numParticipants) {
+        // 余分な参加者を削除
+        participants = participants.slice(0, numParticipants);
     }
     
     // 横線をクリア（参加者数が変わった場合に備えて）
@@ -73,7 +75,6 @@ function updateAmidakuji() {
 
 function createNameInputs() {
     const participantInputsDiv = document.getElementById('participantInputs');
-    const resultInputsDiv = document.getElementById('resultInputs');
     
     // 参加者名の入力欄を作成
     participantInputsDiv.innerHTML = '';
@@ -84,8 +85,6 @@ function createNameInputs() {
         input.value = name;
         input.addEventListener('input', (e) => {
             participants[index] = e.target.value;
-            // 左側のテキストエリアも更新
-            document.getElementById('participants').value = participants.join('\n');
         });
         // クリックでアニメーション
         input.addEventListener('click', () => {
@@ -94,21 +93,6 @@ function createNameInputs() {
             }
         });
         participantInputsDiv.appendChild(input);
-    });
-    
-    // 結果の入力欄を作成
-    resultInputsDiv.innerHTML = '';
-    results.forEach((name, index) => {
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'name-input result';
-        input.value = name;
-        input.addEventListener('input', (e) => {
-            results[index] = e.target.value;
-            // 左側のテキストエリアも更新
-            document.getElementById('results').value = results.join('\n');
-        });
-        resultInputsDiv.appendChild(input);
     });
 }
 
