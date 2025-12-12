@@ -202,14 +202,25 @@ function generateHorizontalLines(count) {
 function calculateAddablePositions() {
     addablePositions = [];
     const numPaths = participants.length;
-    const totalHeight = canvas.height - config.padding * 2;
     const spacing = 50; // 等間隔の間隔(ピクセル)
     const offset = spacing / 2; // 偶数列のオフセット
+    
+    // 既存の横線の最大Y座標を取得
+    let maxLineY = config.padding;
+    if (horizontalLines.length > 0) {
+        maxLineY = Math.max(...horizontalLines.map(line => line.y));
+    }
+    
+    // 最低でも既存の線より下にスペースを確保
+    const minHeight = Math.max(
+        maxLineY + spacing * 3, // 既存の線の下に3段分確保
+        400 // 最小の高さ
+    );
     
     // 列ごとに等間隔で追加可能位置を計算（奇数列と偶数列でずらす）
     for (let col = 0; col < numPaths - 1; col++) {
         const startY = config.padding + spacing + (col % 2 === 0 ? 0 : offset);
-        for (let y = startY; y < canvas.height - config.padding; y += spacing) {
+        for (let y = startY; y < minHeight; y += spacing) {
             addablePositions.push({ y, column: col, id: addablePositions.length });
         }
     }
@@ -221,11 +232,18 @@ function drawAmidakuji() {
     
     const numPaths = participants.length;
     const canvasWidth = config.padding * 2 + config.verticalSpacing * (numPaths - 1);
-    const maxY = Math.max(
-        config.horizontalSpacing * (horizontalLines.length + 2),
-        400 // 最小の高さ
+    
+    // 既存の横線の最大Y座標を取得
+    let maxLineY = 0;
+    if (horizontalLines.length > 0) {
+        maxLineY = Math.max(...horizontalLines.map(line => line.y));
+    }
+    
+    // キャンバスの高さを動的に調整（横線の下に余裕を持たせる）
+    const canvasHeight = Math.max(
+        maxLineY + config.padding + 200, // 横線の下に200px余裕
+        config.padding * 2 + 400 // 最小の高さ
     );
-    const canvasHeight = config.padding * 2 + maxY;
     
     canvas.width = canvasWidth;
     canvas.height = canvasHeight;
@@ -295,6 +313,8 @@ function drawAddablePositions() {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     
+    let displayNumber = 1; // 表示される番号を連番で管理
+    
     for (let pos of addablePositions) {
         // 既存の横線と重なっていないかチェック
         const tooClose = horizontalLines.some(line => 
@@ -315,9 +335,13 @@ function drawAddablePositions() {
             ctx.lineWidth = 2;
             ctx.stroke();
             
-            // 番号を描画
+            // 番号を描画（表示される位置に対して連番）
             ctx.fillStyle = '#667eea';
-            ctx.fillText((pos.id % 99 + 1).toString(), x, pos.y);
+            ctx.fillText(displayNumber.toString(), x, pos.y);
+            
+            // 位置情報に表示番号を保存（クリック判定用）
+            pos.displayNumber = displayNumber;
+            displayNumber++;
         }
     }
 }
@@ -398,6 +422,8 @@ function processCanvasInteraction(x, y) {
                     // 横線を追加
                     horizontalLines.push({ y: pos.y, column: pos.column });
                     horizontalLines.sort((a, b) => a.y - b.y);
+                    // 再描画すると、新しい追加可能位置が自動的に計算されて表示される
+                    // （一番下の番号に線を追加すると、さらに下に新しい番号が現れる）
                     drawAmidakuji();
                 }
                 return;
