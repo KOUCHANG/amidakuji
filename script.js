@@ -1,6 +1,9 @@
-// Version: 2025.12.12-0147
-// Build Date: 2025-12-12 10:47:12 +0900
-// Commit: 7930068
+// Build info (auto-updated by GitHub Actions)
+const BUILD_INFO = {
+    version: '__VERSION__',
+    buildDate: '__BUILD_DATE__',
+    commit: '__COMMIT_HASH__'
+};
 
 let participants = [];
 let results = [];
@@ -22,16 +25,10 @@ let config = {
 };
 
 // バージョン情報をコンソールに出力
-(function() {
-    const version = document.currentScript?.textContent.match(/Version: (.+)/)?.[1] || 'unknown';
-    const buildDate = document.currentScript?.textContent.match(/Build Date: (.+)/)?.[1] || 'unknown';
-    const commit = document.currentScript?.textContent.match(/Commit: (.+)/)?.[1] || 'unknown';
-    
-    console.log('%c🎯 あみだくじ', 'font-size: 20px; font-weight: bold; color: #667eea;');
-    console.log(`%cVersion: ${version}`, 'color: #27ae60; font-weight: bold;');
-    console.log(`%cBuild Date: ${buildDate}`, 'color: #27ae60;');
-    console.log(`%cCommit: ${commit}`, 'color: #27ae60;');
-})();
+console.log('%c🎯 あみだくじ', 'font-size: 20px; font-weight: bold; color: #667eea;');
+console.log(`%cVersion: ${BUILD_INFO.version}`, 'color: #27ae60; font-weight: bold;');
+console.log(`%cBuild Date: ${BUILD_INFO.buildDate}`, 'color: #27ae60;');
+console.log(`%cCommit: ${BUILD_INFO.commit}`, 'color: #27ae60;');
 
 function generateAmidakuji() {
     const participantInput = document.getElementById('participants').value.trim();

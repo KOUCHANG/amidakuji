@@ -29,9 +29,9 @@ jobs:
           echo "Date: ${COMMIT_DATE}"
           
           # script.jsのバージョン情報を更新
-          sed -i "s|// Version: .*|// Version: ${VERSION}|" script.js
-          sed -i "s|// Build Date: .*|// Build Date: ${COMMIT_DATE}|" script.js
-          sed -i "s|// Commit: .*|// Commit: ${COMMIT_HASH}|" script.js
+          sed -i "s|version: '__VERSION__'|version: '${VERSION}'|" script.js
+          sed -i "s|buildDate: '__BUILD_DATE__'|buildDate: '${COMMIT_DATE}'|" script.js
+          sed -i "s|commit: '__COMMIT_HASH__'|commit: '${COMMIT_HASH}'|" script.js
       
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
