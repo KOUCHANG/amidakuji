@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0241',
-    buildDate: '2025-12-12 11:41:39 +0900',
-    commit: 'c98e8fc'
+    version: '2025.12.12-0248',
+    buildDate: '2025-12-12 11:48:17 +0900',
+    commit: '7deab3f'
 };
 
 let participants = [];
@@ -90,11 +90,26 @@ function createNameInputs() {
         input.type = 'text';
         input.className = 'name-input participant';
         input.id = `participant-${index}`; // idを追加
-        input.value = name;
+        // 名前が長い場合は頭文字と番号、短い場合はそのまま表示
+        const displayName = name.length > 4 ? (name.charAt(0) + (index + 1)) : name;
+        input.value = displayName;
+        input.dataset.fullName = name; // フルネームを保持
         input.style.width = config.verticalSpacing + 'px';
         input.style.marginLeft = (index === 0 ? 0 : 0) + 'px';
         input.addEventListener('input', (e) => {
+            // フルネームを更新
             participants[index] = e.target.value;
+            e.target.dataset.fullName = e.target.value;
+        });
+        input.addEventListener('blur', (e) => {
+            // フォーカスが外れたら省略表示に戻す
+            const fullName = e.target.dataset.fullName;
+            const shortName = fullName.length > 4 ? (fullName.charAt(0) + (index + 1)) : fullName;
+            e.target.value = shortName;
+        });
+        input.addEventListener('focus', (e) => {
+            // フォーカス時はフルネームを表示
+            e.target.value = e.target.dataset.fullName;
         });
         // 結果モードの時だけクリックで道順アニメーション
         input.addEventListener('click', () => {
@@ -215,8 +230,9 @@ function drawAmidakuji() {
         showAllResults();
     }
     
-    // クリックイベントを追加
+    // クリックイベントとタッチイベントを追加
     canvas.onclick = handleCanvasClick;
+    canvas.ontouchend = handleCanvasTouch;
 }
 
 function drawAddablePositions() {
@@ -256,13 +272,29 @@ function handleCanvasClick(event) {
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     
+    processCanvasInteraction(x, y);
+}
+
+function handleCanvasTouch(event) {
+    event.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const touch = event.changedTouches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    
+    processCanvasInteraction(x, y);
+}
+
+function processCanvasInteraction(x, y) {
+    
     if (addLineMode) {
         // 追加可能な位置がクリックされたかチェック
         for (let pos of addablePositions) {
             const posX = config.padding + pos.column * config.verticalSpacing + config.verticalSpacing / 2;
             const distance = Math.sqrt(Math.pow(x - posX, 2) + Math.pow(y - pos.y, 2));
             
-            if (distance < 20) {
+            // スマホでタップしやすいように判定範囲を広げる
+            if (distance < 30) {
                 // 既存の横線と重なっていないかチェック
                 const tooClose = horizontalLines.some(line => 
                     Math.abs(line.y - pos.y) < 25 && line.column === pos.column
