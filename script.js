@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1201',
-    buildDate: '2025-12-12 21:00:55 +0900',
-    commit: '9c48da5'
+    version: '2025.12.12-1203',
+    buildDate: '2025-12-12 21:03:36 +0900',
+    commit: '3282a7e'
 };
 
 let participants = [];
@@ -39,7 +39,7 @@ let config = {
     padding: 60,
     verticalSpacing: 120,
     horizontalSpacing: 40,
-    animationSpeed: 0.5
+    animationSpeed: 0.05
 };
 
 // バージョン情報をコンソールに出力
