@@ -30,10 +30,9 @@ console.log(`%cVersion: ${BUILD_INFO.version}`, 'color: #27ae60; font-weight: bo
 console.log(`%cBuild Date: ${BUILD_INFO.buildDate}`, 'color: #27ae60;');
 console.log(`%cCommit: ${BUILD_INFO.commit}`, 'color: #27ae60;');
 
-function generateAmidakuji() {
+function updateAmidakuji() {
     const participantInput = document.getElementById('participants').value.trim();
     const resultInput = document.getElementById('results').value.trim();
-    const lineCount = parseInt(document.getElementById('lineCount').value);
     
     if (!participantInput || !resultInput) {
         alert('参加者と結果を入力してください。');
@@ -43,13 +42,11 @@ function generateAmidakuji() {
     // 改行区切りをメインとし、1行のみの場合はスペース区切りも試す
     participants = participantInput.split('\n').map(p => p.trim()).filter(p => p);
     if (participants.length === 1 && participants[0].includes(' ')) {
-        // 1行でスペース区切りの場合
         participants = participants[0].split(/\s+/).filter(p => p);
     }
     
     results = resultInput.split('\n').map(r => r.trim()).filter(r => r);
     if (results.length === 1 && results[0].includes(' ')) {
-        // 1行でスペース区切りの場合
         results = results[0].split(/\s+/).filter(r => r);
     }
     
@@ -63,11 +60,20 @@ function generateAmidakuji() {
         return;
     }
     
-    generateHorizontalLines(lineCount);
+    // 横線をクリア（参加者数が変わった場合に備えて）
+    horizontalLines = [];
     
-    document.getElementById('setupSection').style.display = 'none';
-    document.getElementById('gameSection').style.display = 'block';
+    // 結果表示をクリア
+    document.getElementById('resultsDisplay').innerHTML = '';
+    document.getElementById('resultsDisplay').style.display = 'none';
     
+    drawAmidakuji();
+}
+
+function clearLines() {
+    horizontalLines = [];
+    document.getElementById('resultsDisplay').innerHTML = '';
+    document.getElementById('resultsDisplay').style.display = 'none';
     drawAmidakuji();
 }
 
@@ -417,21 +423,4 @@ function toggleAddLineMode() {
     }
     
     drawAmidakuji();
-}
-
-function resetGame() {
-    addLineMode = false;
-    
-    // ボタンの状態をリセット
-    const btn = document.getElementById('toggleAddMode');
-    if (btn) {
-        btn.textContent = '線を追加';
-        btn.style.cssText = 'background: #6c757d; color: white;';
-    }
-    
-    document.getElementById('setupSection').style.display = 'block';
-    document.getElementById('gameSection').style.display = 'none';
-    document.getElementById('resultsDisplay').innerHTML = '';
-    document.getElementById('resultsDisplay').style.display = 'none';
-    document.getElementById('addModeInfo').style.display = 'none';
 }
