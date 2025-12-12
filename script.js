@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0315',
-    buildDate: '2025-12-12 12:15:30 +0900',
-    commit: '0a32a8c'
+    version: '2025.12.12-0318',
+    buildDate: '2025-12-12 12:18:24 +0900',
+    commit: '8189bbe'
 };
 
 let participants = [];
@@ -144,7 +144,6 @@ function initCanvasEvents() {
 window.addEventListener('DOMContentLoaded', () => {
     initCanvasEvents();
 });
-}
 
 function clearLines() {
     horizontalLines = [];
