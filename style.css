@@ -105,6 +105,21 @@ h1 {
     background: #5a6268;
 }
 
+.btn-toggle {
+    background: #667eea;
+    color: white;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.btn-toggle:hover {
+    background: #5568d3;
+}
+
+.input-panel {
+    display: block;
+}
+
 .controls {
     display: flex;
     gap: 10px;
@@ -122,14 +137,13 @@ h1 {
 
 .name-inputs {
     display: flex;
-    gap: 10px;
+    gap: 0;
     margin: 10px 0;
-    justify-content: center;
-    flex-wrap: wrap;
+    justify-content: flex-start;
 }
 
 .name-input {
-    padding: 8px 12px;
+    padding: 8px 4px;
     border: 2px solid #ddd;
     border-radius: 6px;
     font-size: 14px;
@@ -137,8 +151,7 @@ h1 {
     text-align: center;
     transition: all 0.3s;
     background: white;
-    min-width: 60px;
-    max-width: 150px;
+    width: 120px; /* 縦線の間隔と同じ */
     cursor: pointer;
 }
 
@@ -245,5 +258,19 @@ canvas {
     
     .btn {
         width: 100%;
+    }
+    
+    .input-panel {
+        display: none; /* スマホではデフォルトで非表示 */
+    }
+    
+    .name-inputs {
+        padding: 0 20px; /* スマホでは余白を減らす */
+        overflow-x: auto;
+    }
+    
+    .name-input {
+        width: 80px; /* スマホでは少し狭く */
+        font-size: 12px;
     }
 }
