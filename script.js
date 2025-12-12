@@ -68,6 +68,9 @@ function updateAmidakuji() {
     
     createNameInputs();
     drawAmidakuji();
+    
+    // モーダルを閉じる
+    closeSettings();
 }
 
 function createNameInputs() {
@@ -396,11 +399,14 @@ function toggleResultMode() {
     resultViewMode = !resultViewMode;
     const btn = document.getElementById('toggleResultMode');
     const info = document.getElementById('resultModeInfo');
+    const createModeButtons = document.getElementById('createModeButtons');
     
     if (resultViewMode) {
         btn.textContent = '結果モード中...';
         btn.style.cssText = 'background: #27ae60 !important; color: white;';
         info.style.display = 'block';
+        // ボタンを非表示にして結果表示モードに
+        createModeButtons.style.display = 'none';
         // 他のモードを解除
         if (addLineMode) {
             toggleAddLineMode();
@@ -420,6 +426,8 @@ function toggleResultMode() {
         btn.textContent = '結果モード';
         btn.style.cssText = 'background: #667eea; color: white;';
         info.style.display = 'none';
+        // ボタンを表示
+        createModeButtons.style.display = 'flex';
         // 参加者入力欄を編集可能に
         for (let i = 0; i < participants.length; i++) {
             const input = document.getElementById(`participant-${i}`);
@@ -458,15 +466,29 @@ function toggleAddLineMode() {
     drawAmidakuji();
 }
 
-function toggleInputPanel() {
-    const panel = document.getElementById('inputPanel');
-    const btn = event.target;
-    
-    if (panel.style.display === 'none') {
-        panel.style.display = 'block';
-        btn.innerHTML = '結果/景品を入力 ▲';
-    } else {
-        panel.style.display = 'none';
-        btn.innerHTML = '結果/景品を入力 ▼';
+// モーダル管理
+function openSettings() {
+    document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettings(event) {
+    const modal = document.getElementById('settingsModal');
+    // eventがundefinedの場合は閉じる、eventがあればモーダル外クリックのみ閉じる
+    if (!event || event.target === modal) {
+        modal.classList.remove('active');
     }
+}
+
+// リセット機能（線をクリアと同じ）
+function resetAmidakuji() {
+    horizontalLines = [];
+    // 結果モードを解除
+    if (resultViewMode) {
+        toggleResultMode();
+    }
+    // 線追加モードを解除
+    if (addLineMode) {
+        toggleAddLineMode();
+    }
+    drawAmidakuji();
 }

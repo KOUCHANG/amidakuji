@@ -5,131 +5,66 @@
 }
 
 body {
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     min-height: 100vh;
-    padding: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    padding: 0;
+    margin: 0;
 }
 
-.container {
+/* 設定ボタン */
+.settings-btn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
     background: white;
-    border-radius: 20px;
-    padding: 40px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    max-width: 1200px;
-    width: 100%;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    transition: transform 0.2s;
+}
+
+.settings-btn:hover {
+    transform: scale(1.1);
+}
+
+.settings-btn:active {
+    transform: scale(0.95);
+}
+
+/* メインコンテナ */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+    padding-top: 80px;
 }
 
 h1 {
+    color: white;
     text-align: center;
-    color: #333;
     margin-bottom: 30px;
-    font-size: 2.5em;
+    font-size: 2em;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.main-content {
-    display: flex;
-    gap: 30px;
-    align-items: flex-start;
-}
-
-.left-panel {
-    flex: 0 0 350px;
-    min-width: 300px;
-}
-
-.right-panel {
-    flex: 1;
-    min-width: 400px;
-}
-
-.input-group {
+/* あみだくじ表示エリア */
+.amidakuji-wrapper {
+    background: white;
+    border-radius: 20px;
+    padding: 30px 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
     margin-bottom: 20px;
-}
-
-.input-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
-    font-weight: bold;
-}
-
-.input-group input,
-.input-group textarea {
     width: 100%;
-    padding: 12px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    transition: border-color 0.3s;
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
-}
-
-.input-group input:focus,
-.input-group textarea:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-.btn {
-    padding: 12px 30px;
-    border: none;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s;
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    width: 100%;
-    margin-top: 10px;
-}
-
-.btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
-}
-
-.btn-secondary {
-    background: #6c757d;
-    color: white;
-}
-
-.btn-secondary:hover {
-    background: #5a6268;
-}
-
-.btn-toggle {
-    background: #667eea;
-    color: white;
-    width: 100%;
-    margin-bottom: 10px;
-}
-
-.btn-toggle:hover {
-    background: #5568d3;
-}
-
-.input-panel {
-    display: block;
-}
-
-.controls {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin-bottom: 30px;
-}
-
-.amidakuji-container {
-    overflow-x: auto;
-    margin: 20px 0;
+    max-width: 800px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -138,7 +73,7 @@ h1 {
 .name-inputs {
     display: flex;
     gap: 0;
-    margin: 10px 0;
+    margin-bottom: 20px;
     justify-content: flex-start;
 }
 
@@ -151,7 +86,7 @@ h1 {
     text-align: center;
     transition: all 0.3s;
     background: white;
-    width: 120px; /* 縦線の間隔と同じ */
+    width: 120px;
     cursor: pointer;
 }
 
@@ -171,134 +106,259 @@ h1 {
     color: #2c3e50;
 }
 
-.name-input.result {
-    color: #27ae60;
-}
-
 canvas {
-    border: 2px solid #ddd;
+    border: 2px solid #e0e0e0;
     border-radius: 10px;
     background: white;
     cursor: pointer;
+    max-width: 100%;
+    height: auto;
 }
 
-.results-display {
-    margin-top: 30px;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 10px;
+/* アクションボタン */
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 15px;
+}
+
+.btn {
+    padding: 14px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    flex: 1;
+    min-width: 120px;
+}
+
+.btn:active {
+    transform: translateY(2px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.btn-result {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.btn-result:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+.btn-add {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-add:hover {
+    background: #5a6268;
+}
+
+.btn-reset {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-reset:hover {
+    background: #c82333;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+}
+
+/* モード情報 */
+.mode-info {
+    text-align: center;
+    padding: 12px 20px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 15px;
+    max-width: 500px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.mode-info p {
+    margin: 0;
+    color: #667eea;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.mode-info.add-mode p {
+    color: #ff6b6b;
+}
+
+/* モーダルオーバーレイ */
+.modal-overlay {
     display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }
 
-.result-item {
-    padding: 15px;
-    margin-bottom: 10px;
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
     background: white;
-    border-radius: 8px;
-    border-left: 4px solid #667eea;
-    animation: slideIn 0.5s ease-out;
+    border-radius: 20px;
+    padding: 0;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease-out;
 }
 
-@keyframes slideIn {
+@keyframes slideUp {
     from {
         opacity: 0;
-        transform: translateX(-20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
 
-.result-item strong {
-    color: #667eea;
+.modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.result-mode-info {
-    text-align: center;
-    padding: 15px;
-    background: linear-gradient(135deg, rgba(39, 174, 96, 0.1) 0%, rgba(39, 174, 96, 0.2) 100%);
-    border-radius: 10px;
-    margin-bottom: 20px;
-    border: 2px dashed #27ae60;
-}
-
-.result-mode-info p {
+.modal-header h2 {
     margin: 0;
-    color: #27ae60;
-    font-weight: bold;
+    font-size: 1.5em;
+    color: #333;
 }
 
-.add-mode-info {
-    text-align: center;
-    padding: 15px;
-    background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(255, 107, 107, 0.2) 100%);
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: #999;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.close-btn:hover {
+    background: #f0f0f0;
+    color: #333;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-body label {
+    display: block;
+    margin-bottom: 10px;
+    color: #555;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.modal-body textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
     border-radius: 10px;
-    margin-bottom: 20px;
-    border: 2px dashed #ff6b6b;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color 0.3s;
 }
 
-.add-mode-info p {
-    margin: 0;
-    color: #ff6b6b;
-    font-weight: bold;
+.modal-body textarea:focus {
+    outline: none;
+    border-color: #667eea;
 }
 
+/* レスポンシブ対応 */
 @media (max-width: 768px) {
-    .container {
-        padding: 10px;
-    }
-    
     h1 {
         font-size: 1.5em;
-        margin-bottom: 15px;
+        margin-bottom: 20px;
     }
     
-    .main-content {
-        flex-direction: column;
+    .main-container {
+        padding: 15px;
+        padding-top: 70px;
     }
     
-    .left-panel {
-        flex: 1;
-        width: 100%;
-    }
-    
-    .right-panel {
-        flex: 1;
-        width: 100%;
-        overflow-x: auto;
-    }
-    
-    .controls {
-        flex-direction: column;
-    }
-    
-    .btn {
-        width: 100%;
-    }
-    
-    .input-panel {
-        display: none; /* スマホではデフォルトで非表示 */
-    }
-    
-    .amidakuji-container {
-        width: 100%;
-        overflow-x: auto;
-    }
-    
-    .name-inputs {
-        padding-left: 20px;
-        overflow-x: visible;
+    .amidakuji-wrapper {
+        padding: 20px 15px;
+        border-radius: 15px;
     }
     
     .name-input {
-        width: 60px;
-        font-size: 11px;
+        width: 70px;
+        font-size: 12px;
         padding: 6px 2px;
     }
     
-    canvas {
-        max-width: 100%;
-        height: auto;
+    .action-buttons {
+        gap: 8px;
+    }
+    
+    .btn {
+        padding: 12px 18px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+    
+    .settings-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+        top: 12px;
+        right: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .name-input {
+        width: 60px;
+        font-size: 11px;
+    }
+    
+    .btn {
+        font-size: 13px;
+        padding: 10px 14px;
     }
 }

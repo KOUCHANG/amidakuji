@@ -7,41 +7,47 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <!-- 設定ボタン -->
+    <button class="settings-btn" onclick="openSettings()">⚙️</button>
+    
+    <!-- メインコンテンツ -->
+    <div class="main-container">
         <h1>🎯 あみだくじ</h1>
         
-        <div class="main-content">
-            <div class="left-panel">
-                <button class="btn btn-toggle" onclick="toggleInputPanel()">結果/景品を入力 ▼</button>
-                <div id="inputPanel" class="input-panel">
-                    <div class="input-group">
-                        <label>結果/景品（1行に1つ、またはスペース区切り）:</label>
-                        <textarea id="results" rows="6" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
-                    </div>
-                    
-                    <button class="btn btn-primary" onclick="updateAmidakuji()">あみだくじを更新</button>
-                </div>
-                
-                <div class="controls" style="margin-top: 20px;">
-                    <button class="btn btn-primary" id="toggleResultMode" onclick="toggleResultMode()">結果モード</button>
-                    <button class="btn btn-secondary" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>
-                    <button class="btn btn-secondary" onclick="clearLines()">線をクリア</button>
-                </div>
-                
-                <div id="resultModeInfo" class="result-mode-info" style="display: none; margin-top: 15px;">
-                    <p>👆 参加者をクリックして道順を確認（結果が表示されています）</p>
-                </div>
-                
-                <div id="addModeInfo" class="add-mode-info" style="display: none; margin-top: 15px;">
-                    <p>📍 数字をクリックして横線を追加してください</p>
-                </div>
+        <!-- あみだくじ表示エリア -->
+        <div class="amidakuji-wrapper">
+            <div id="participantInputs" class="name-inputs"></div>
+            <canvas id="amidakujiCanvas"></canvas>
+        </div>
+        
+        <!-- モード別ボタン -->
+        <div class="action-buttons" id="createModeButtons">
+            <button class="btn btn-result" id="toggleResultMode" onclick="toggleResultMode()">結果モード</button>
+            <button class="btn btn-add" id="toggleAddMode" onclick="toggleAddLineMode()">線を追加</button>
+            <button class="btn btn-reset" onclick="resetAmidakuji()">リセット</button>
+        </div>
+        
+        <!-- モード情報 -->
+        <div id="resultModeInfo" class="mode-info" style="display: none;">
+            <p>👆 参加者をクリックして道順を確認</p>
+        </div>
+        
+        <div id="addModeInfo" class="mode-info add-mode" style="display: none;">
+            <p>📍 数字をクリックして横線を追加</p>
+        </div>
+    </div>
+    
+    <!-- オーバーレイモーダル -->
+    <div class="modal-overlay" id="settingsModal" onclick="closeSettings(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2>結果/景品の設定</h2>
+                <button class="close-btn" onclick="closeSettings()">&times;</button>
             </div>
-            
-            <div class="right-panel">
-                <div class="amidakuji-container">
-                    <div id="participantInputs" class="name-inputs"></div>
-                    <canvas id="amidakujiCanvas"></canvas>
-                </div>
+            <div class="modal-body">
+                <label>結果/景品（1行に1つ）:</label>
+                <textarea id="results" rows="8" placeholder="1等&#10;2等&#10;3等&#10;4等"></textarea>
+                <button class="btn btn-primary" onclick="updateAmidakuji()">あみだくじを更新</button>
             </div>
         </div>
     </div>
