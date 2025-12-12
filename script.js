@@ -39,7 +39,7 @@ let config = {
     padding: 60,
     verticalSpacing: 120,
     horizontalSpacing: 40,
-    animationSpeed: 0.1
+    animationSpeed: 0.01
 };
 
 // バージョン情報をコンソールに出力
@@ -173,8 +173,6 @@ function initCanvasEvents() {
         
         // タッチイベント
         canvas.addEventListener('touchstart', handleCanvasTouch, { passive: false });
-        
-        console.log('Canvas events initialized');
     }
 }
 
@@ -385,7 +383,6 @@ function handleCanvasClick(event) {
     const x = (event.clientX - rect.left) * scaleX;
     const y = (event.clientY - rect.top) * scaleY;
     
-    console.log('Click detected at:', x, y); // デバッグ用
     processCanvasInteraction(x, y);
 }
 
@@ -397,8 +394,6 @@ function handleCanvasTouch(event) {
     const touch = event.touches[0] || event.changedTouches[0];
     const x = (touch.clientX - rect.left) * scaleX;
     const y = (touch.clientY - rect.top) * scaleY;
-    
-    console.log('Touch detected at:', x, y); // デバッグ用
     
     // タップ対象がある場合のみスクロールを防ぐ
     const shouldPreventDefault = checkIfInteractionNeeded(x, y);
