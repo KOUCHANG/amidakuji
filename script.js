@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1217',
-    buildDate: '2025-12-12 21:17:08 +0900',
-    commit: '3e0420d'
+    version: '2025.12.12-1220',
+    buildDate: '2025-12-12 21:19:52 +0900',
+    commit: '6a166ee'
 };
 
 let participants = [];
@@ -397,31 +397,29 @@ function drawAddablePositions() {
 }
 
 function drawRevealedHighlights() {
-    // アニメーション済みの参加者と結果を囲む
+    // アニメーション済みの参加者と結果に星マークを表示
+    ctx.font = 'bold 24px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
     for (let revealed of revealedPaths) {
         const participantIndex = revealed.participantIndex;
         const resultIndex = revealed.resultIndex;
         const color = highlightColors[participantIndex % highlightColors.length];
         
-        // 参加者名を囲む（上部）
+        // 参加者の線の上部（縦線の開始位置）に★を表示
         const participantX = config.padding + participantIndex * config.verticalSpacing;
-        const participantY = config.padding - 15;
+        const participantY = config.padding;
         
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(participantX, participantY, 25, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fillText('★', participantX, participantY);
         
-        // 結果を囲む（下部）
+        // 結果の線の下部（縦線の終了位置）に★を表示
         const resultX = config.padding + resultIndex * config.verticalSpacing;
-        const resultY = canvas.height - config.padding + 30;
+        const resultY = canvas.height - config.padding;
         
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.arc(resultX, resultY, 30, 0, Math.PI * 2);
-        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.fillText('★', resultX, resultY);
     }
 }
 
