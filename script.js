@@ -66,10 +66,6 @@ function updateAmidakuji() {
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
     
-    // 結果表示をクリア
-    document.getElementById('resultsDisplay').innerHTML = '';
-    document.getElementById('resultsDisplay').style.display = 'none';
-    
     createNameInputs();
     drawAmidakuji();
 }
@@ -109,8 +105,6 @@ function createNameInputs() {
 
 function clearLines() {
     horizontalLines = [];
-    document.getElementById('resultsDisplay').innerHTML = '';
-    document.getElementById('resultsDisplay').style.display = 'none';
     drawAmidakuji();
 }
 
@@ -371,18 +365,7 @@ function tracePath(startColumn) {
 }
 
 function displayResult(startIndex, endIndex) {
-    const resultsDisplay = document.getElementById('resultsDisplay');
-    // 既存の結果をクリア
-    resultsDisplay.innerHTML = '';
-    resultsDisplay.style.display = 'block';
-    
-    const resultItem = document.createElement('div');
-    resultItem.className = 'result-item';
-    resultItem.innerHTML = `<strong>${participants[startIndex]}</strong> → ${results[endIndex]}`;
-    
-    resultsDisplay.appendChild(resultItem);
-    
-    // 結果をキャンバスにも表示
+    // 結果をキャンバスに表示
     ctx.font = 'bold 16px sans-serif';
     ctx.fillStyle = config.resultColor;
     ctx.textAlign = 'center';
