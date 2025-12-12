@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0201',
-    buildDate: '2025-12-12 11:00:53 +0900',
-    commit: '3a4a922'
+    version: '2025.12.12-0204',
+    buildDate: '2025-12-12 11:04:02 +0900',
+    commit: '126f41e'
 };
 
 let participants = [];
@@ -67,7 +67,49 @@ function updateAmidakuji() {
     document.getElementById('resultsDisplay').innerHTML = '';
     document.getElementById('resultsDisplay').style.display = 'none';
     
+    createNameInputs();
     drawAmidakuji();
+}
+
+function createNameInputs() {
+    const participantInputsDiv = document.getElementById('participantInputs');
+    const resultInputsDiv = document.getElementById('resultInputs');
+    
+    // 参加者名の入力欄を作成
+    participantInputsDiv.innerHTML = '';
+    participants.forEach((name, index) => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'name-input participant';
+        input.value = name;
+        input.addEventListener('input', (e) => {
+            participants[index] = e.target.value;
+            // 左側のテキストエリアも更新
+            document.getElementById('participants').value = participants.join('\n');
+        });
+        // クリックでアニメーション
+        input.addEventListener('click', () => {
+            if (!addLineMode) {
+                tracePathWithAnimation(index);
+            }
+        });
+        participantInputsDiv.appendChild(input);
+    });
+    
+    // 結果の入力欄を作成
+    resultInputsDiv.innerHTML = '';
+    results.forEach((name, index) => {
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'name-input result';
+        input.value = name;
+        input.addEventListener('input', (e) => {
+            results[index] = e.target.value;
+            // 左側のテキストエリアも更新
+            document.getElementById('results').value = results.join('\n');
+        });
+        resultInputsDiv.appendChild(input);
+    });
 }
 
 function clearLines() {
@@ -168,23 +210,6 @@ function drawAmidakuji() {
         ctx.stroke();
     }
     
-    // 参加者名を描画
-    ctx.font = 'bold 16px sans-serif';
-    ctx.fillStyle = config.participantColor;
-    ctx.textAlign = 'center';
-    
-    for (let i = 0; i < participants.length; i++) {
-        const x = config.padding + i * config.verticalSpacing;
-        ctx.fillText(participants[i], x, config.padding - 20);
-    }
-    
-    // 結果を描画（最初は隠す）
-    ctx.fillStyle = config.resultColor;
-    for (let i = 0; i < results.length; i++) {
-        const x = config.padding + i * config.verticalSpacing;
-        // 結果は最初は表示しない
-    }
-    
     // キャンバスのサイズが確定した後に追加可能位置を計算
     calculateAddablePositions();
     
@@ -253,15 +278,6 @@ function handleCanvasClick(event) {
                     drawAmidakuji();
                 }
                 return;
-            }
-        }
-    } else {
-        // 参加者名がクリックされたかチェック
-        for (let i = 0; i < participants.length; i++) {
-            const participantX = config.padding + i * config.verticalSpacing;
-            if (Math.abs(x - participantX) < 30 && y < config.padding) {
-                tracePathWithAnimation(i);
-                break;
             }
         }
     }
