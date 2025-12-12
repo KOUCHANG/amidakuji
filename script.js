@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1223',
-    buildDate: '2025-12-12 21:23:15 +0900',
-    commit: 'f81b4a7'
+    version: '2025.12.12-1241',
+    buildDate: '2025-12-12 21:41:21 +0900',
+    commit: '3f8c79e'
 };
 
 let participants = [];
@@ -732,8 +732,8 @@ function toggleResultMode() {
         if (addLineMode) {
             toggleAddLineMode();
         }
-        // 結果を表示（revealAllと同じ処理）
-        showAllResults();
+        // キャンバスを再描画して結果を表示
+        drawAmidakuji();
     } else {
         btn.textContent = '結果モード';
         btn.style.cssText = 'background: #667eea; color: white;';
