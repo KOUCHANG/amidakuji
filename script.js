@@ -533,26 +533,64 @@ function tracePath(startColumn) {
     return path;
 }
 
-function displayResult(startIndex, endIndex) {
-    // 結果をキャンバスに表示
+// 長いテキストを複数行に分割して描画する関数
+function drawMultiLineText(text, x, y, maxWidth, lineHeight) {
     ctx.font = 'bold 16px sans-serif';
     ctx.fillStyle = config.resultColor;
     ctx.textAlign = 'center';
+    
+    // テキストの幅を測定
+    const textWidth = ctx.measureText(text).width;
+    
+    // 最大幅以内なら1行で表示
+    if (textWidth <= maxWidth) {
+        ctx.fillText(text, x, y);
+        return;
+    }
+    
+    // 文字を1文字ずつ追加して、最大幅を超えたら改行
+    const words = text.split('');
+    let line = '';
+    let lines = [];
+    
+    for (let i = 0; i < words.length; i++) {
+        const testLine = line + words[i];
+        const testWidth = ctx.measureText(testLine).width;
+        
+        if (testWidth > maxWidth && line.length > 0) {
+            lines.push(line);
+            line = words[i];
+        } else {
+            line = testLine;
+        }
+    }
+    lines.push(line);
+    
+    // 複数行を描画（中央揃え）
+    const startY = y - ((lines.length - 1) * lineHeight) / 2;
+    for (let i = 0; i < lines.length; i++) {
+        ctx.fillText(lines[i], x, startY + i * lineHeight);
+    }
+}
+
+function displayResult(startIndex, endIndex) {
+    // 結果をキャンバスに表示
     const x = config.padding + endIndex * config.verticalSpacing;
-    ctx.fillText(shuffledResults[endIndex], x, canvas.height - config.padding + 30);
+    const y = canvas.height - config.padding + 30;
+    const maxWidth = config.verticalSpacing - 20; // 左右10pxのマージン
+    drawMultiLineText(shuffledResults[endIndex], x, y, maxWidth, 20);
 }
 
 function showAllResults() {
     // キャンバスに結果を表示（左下の一覧は表示しない）
-    ctx.font = 'bold 16px sans-serif';
-    ctx.fillStyle = config.resultColor;
-    ctx.textAlign = 'center';
+    const maxWidth = config.verticalSpacing - 20; // 左右10pxのマージン
     
     for (let i = 0; i < participants.length; i++) {
         const path = tracePath(i);
         const endIndex = path[path.length - 1].column;
         const x = config.padding + endIndex * config.verticalSpacing;
-        ctx.fillText(shuffledResults[endIndex], x, canvas.height - config.padding + 30);
+        const y = canvas.height - config.padding + 30;
+        drawMultiLineText(shuffledResults[endIndex], x, y, maxWidth, 20);
     }
 }
 
