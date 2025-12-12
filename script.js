@@ -470,31 +470,47 @@ function processCanvasInteraction(x, y) {
 
 function tracePathWithAnimation(startIndex, showResult = false) {
     const path = tracePath(startIndex);
-    let currentStep = 0;
+    let progress = 0;
+    const totalSegments = path.length - 1;
+    const stepsPerSegment = 20; // 各セグメントを20ステップで描画
+    const totalSteps = totalSegments * stepsPerSegment;
     
-    // animationSpeedに基づいてフレーム間隔を計算（速度が小さいほど遅くなる）
+    // animationSpeedに基づいてフレーム間隔を計算
     const frameInterval = 50 / config.animationSpeed;
     
     function animate() {
-        if (currentStep < path.length - 1) {
+        if (progress <= totalSteps) {
             drawAmidakuji();
             
             ctx.strokeStyle = config.highlightColor;
             ctx.lineWidth = config.lineWidth + 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
             
-            for (let i = 0; i <= currentStep; i++) {
-                const point1 = path[i];
-                const point2 = path[i + 1];
-                
-                if (point2) {
-                    ctx.beginPath();
-                    ctx.moveTo(point1.x, point1.y);
-                    ctx.lineTo(point2.x, point2.y);
-                    ctx.stroke();
-                }
+            // 現在のセグメントとセグメント内の進捗を計算
+            const currentSegment = Math.floor(progress / stepsPerSegment);
+            const segmentProgress = (progress % stepsPerSegment) / stepsPerSegment;
+            
+            ctx.beginPath();
+            ctx.moveTo(path[0].x, path[0].y);
+            
+            // 完了したセグメントを描画
+            for (let i = 0; i < currentSegment && i < totalSegments; i++) {
+                ctx.lineTo(path[i + 1].x, path[i + 1].y);
             }
             
-            currentStep++;
+            // 現在のセグメントの途中まで描画
+            if (currentSegment < totalSegments) {
+                const point1 = path[currentSegment];
+                const point2 = path[currentSegment + 1];
+                const currentX = point1.x + (point2.x - point1.x) * segmentProgress;
+                const currentY = point1.y + (point2.y - point1.y) * segmentProgress;
+                ctx.lineTo(currentX, currentY);
+            }
+            
+            ctx.stroke();
+            
+            progress++;
             setTimeout(animate, frameInterval);
         } else {
             // アニメーション終了後、showResultがtrueの場合のみ結果を表示
