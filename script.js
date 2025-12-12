@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-0301',
-    buildDate: '2025-12-12 12:01:30 +0900',
-    commit: '7b082bf'
+    version: '2025.12.12-0315',
+    buildDate: '2025-12-12 12:15:30 +0900',
+    commit: '0a32a8c'
 };
 
 let participants = [];
@@ -53,10 +53,10 @@ function updateAmidakuji() {
     // 参加者数を結果の数に合わせる
     const numParticipants = results.length;
     
-    // 既存の参加者名を保持しつつ、不足分は追加
+    // 既存の参加者名を保持しつつ、不足分は追加（空文字列で初期化）
     if (participants.length < numParticipants) {
         for (let i = participants.length; i < numParticipants; i++) {
-            participants.push(`参加者${i + 1}`);
+            participants.push('');
         }
     } else if (participants.length > numParticipants) {
         // 余分な参加者を削除
@@ -66,11 +66,8 @@ function updateAmidakuji() {
     // 横線をクリア（参加者数が変わった場合に備えて）
     horizontalLines = [];
     
-    // 参加者名テキストエリアを更新
-    const participantNamesTextarea = document.getElementById('participantNames');
-    if (participantNamesTextarea) {
-        participantNamesTextarea.value = participants.join('\n');
-    }
+    // 参加者入力フィールドを作成
+    createNameInputs();
     
     drawAmidakuji();
     
@@ -79,35 +76,53 @@ function updateAmidakuji() {
 }
 
 // 参加者名をテキストエリアから読み取り
- function updateParticipantsFromTextarea() {
-    const textarea = document.getElementById('participantNames');
-    if (!textarea) return;
-    
-    const names = textarea.value.split('\n').map(n => n.trim()).filter(n => n);
-    
-    // 結果の数と合わせる
-    if (results.length > 0) {
-        const targetCount = results.length;
-        if (names.length < targetCount) {
-            // 不足分を追加
-            for (let i = names.length; i < targetCount; i++) {
-                names.push(`参加者${i + 1}`);
-            }
-        } else if (names.length > targetCount) {
-            // 余分を削除
-            names.length = targetCount;
-        }
+// 参加者名を個別入力から読み取り
+function updateParticipantFromInput(index) {
+    const input = document.getElementById(`participant-${index}`);
+    if (input) {
+        participants[index] = input.value.trim() || '';
+        drawAmidakuji();
     }
-    
-    participants = names;
-    drawAmidakuji();
 }
 
-// テキストエリアにイベントリスナを追加
-function initParticipantInput() {
-    const textarea = document.getElementById('participantNames');
-    if (textarea) {
-        textarea.addEventListener('input', updateParticipantsFromTextarea);
+// 丸つき数字を生成
+function getCircledNumber(num) {
+    // 丸つき数字 ①-⑳
+    const circledNumbers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩',
+                           '⑪', '⑫', '⑬', '⑭', '⑮', '⑯', '⑰', '⑱', '⑲', '⑳'];
+    if (num > 0 && num <= circledNumbers.length) {
+        return circledNumbers[num - 1];
+    }
+    return `(${num})`;
+}
+
+// 個別入力フィールドを作成
+function createNameInputs() {
+    const container = document.getElementById('participantInputs');
+    if (!container) return;
+    
+    container.innerHTML = '';
+    
+    for (let i = 0; i < participants.length; i++) {
+        const row = document.createElement('div');
+        row.className = 'participant-input-row';
+        
+        // 丸つき数字
+        const numberSpan = document.createElement('span');
+        numberSpan.className = 'participant-number';
+        numberSpan.textContent = getCircledNumber(i + 1);
+        
+        // 入力フィールド
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.id = `participant-${i}`;
+        input.value = participants[i];
+        input.placeholder = `参加者${i + 1}`;
+        input.addEventListener('input', () => updateParticipantFromInput(i));
+        
+        row.appendChild(numberSpan);
+        row.appendChild(input);
+        container.appendChild(row);
     }
 }
 
@@ -127,12 +142,8 @@ function initCanvasEvents() {
 
 // ページ読み込み時に初期化
 window.addEventListener('DOMContentLoaded', () => {
-    initParticipantInput();
     initCanvasEvents();
 });
-
-function createNameInputs() {
-    // 何もしない（互換性のために関数を残す）
 }
 
 function clearLines() {
@@ -208,16 +219,23 @@ function drawAmidakuji() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     // 参加者名を上部に描画
-    ctx.font = 'bold 14px sans-serif';
-    ctx.fillStyle = config.participantColor;
+    ctx.font = 'bold 16px sans-serif';
     ctx.textAlign = 'center';
     
     for (let i = 0; i < numPaths; i++) {
         const x = config.padding + i * config.verticalSpacing;
-        const name = participants[i] || `参加者${i + 1}`;
-        // 名前が長い場合は省略
-        const displayName = name.length > 5 ? name.substring(0, 4) + '...' : name;
-        ctx.fillText(displayName, x, config.padding - 15);
+        const name = participants[i] || '';
+        
+        if (name.trim()) {
+            // 名前が入力されている場合
+            ctx.fillStyle = config.participantColor;
+            const displayName = name.length > 5 ? name.substring(0, 4) + '...' : name;
+            ctx.fillText(displayName, x, config.padding - 15);
+        } else {
+            // 未入力の場合は丸つき数字を表示
+            ctx.fillStyle = '#667eea';
+            ctx.fillText(getCircledNumber(i + 1), x, config.padding - 15);
+        }
     }
     
     // 縦線を描画
@@ -303,9 +321,6 @@ function handleCanvasClick(event) {
 }
 
 function handleCanvasTouch(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    
     const canvas = document.getElementById('amidakujiCanvas');
     const rect = canvas.getBoundingClientRect();
     const scaleX = canvas.width / rect.width;
@@ -315,7 +330,39 @@ function handleCanvasTouch(event) {
     const y = (touch.clientY - rect.top) * scaleY;
     
     console.log('Touch detected at:', x, y); // デバッグ用
-    processCanvasInteraction(x, y);
+    
+    // タップ対象がある場合のみスクロールを防ぐ
+    const shouldPreventDefault = checkIfInteractionNeeded(x, y);
+    if (shouldPreventDefault) {
+        event.preventDefault();
+        event.stopPropagation();
+        processCanvasInteraction(x, y);
+    }
+}
+
+function checkIfInteractionNeeded(x, y) {
+    // 追加モードの場合、追加可能な位置の近くかチェック
+    if (addLineMode) {
+        for (let pos of addablePositions) {
+            const posX = config.padding + pos.column * config.verticalSpacing + config.verticalSpacing / 2;
+            const distance = Math.sqrt(Math.pow(x - posX, 2) + Math.pow(y - pos.y, 2));
+            if (distance < 30) {
+                return true;
+            }
+        }
+    }
+    
+    // 結果モードの場合、参加者の位置近くかチェック
+    if (resultViewMode) {
+        for (let i = 0; i < participants.length; i++) {
+            const pathX = config.padding + i * config.verticalSpacing;
+            if (Math.abs(x - pathX) < 30 && y < config.padding + 50) {
+                return true;
+            }
+        }
+    }
+    
+    return false;
 }
 
 function processCanvasInteraction(x, y) {

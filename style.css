@@ -71,35 +71,45 @@ h1 {
 }
 
 /* 参加者入力エリア */
-.participant-input-area {
+.participant-inputs {
     width: 100%;
     margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
-.participant-input-area label {
-    display: block;
-    margin-bottom: 8px;
-    color: #555;
+.participant-input-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.participant-number {
+    font-size: 20px;
+    min-width: 30px;
+    text-align: center;
     font-weight: bold;
-    font-size: 14px;
+    color: #667eea;
 }
 
-.participant-input-area textarea {
-    width: 100%;
-    padding: 12px;
+.participant-input-row input {
+    flex: 1;
+    padding: 10px 12px;
     border: 2px solid #ddd;
-    border-radius: 10px;
+    border-radius: 8px;
     font-size: 14px;
-    font-family: inherit;
-    resize: vertical;
-    transition: border-color 0.3s;
-    min-height: 80px;
+    transition: all 0.3s;
 }
 
-.participant-input-area textarea:focus {
+.participant-input-row input:focus {
     outline: none;
     border-color: #667eea;
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.participant-input-row input::placeholder {
+    color: #aaa;
 }
 
 .name-inputs {
@@ -147,7 +157,7 @@ canvas {
     cursor: pointer;
     max-width: 100%;
     height: auto;
-    touch-action: none; /* タッチイベントの最適化 */
+    touch-action: pan-y; /* 縦スクロールを許可 */
     -webkit-tap-highlight-color: transparent; /* タップハイライトを無効化 */
 }
 
