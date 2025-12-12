@@ -27,8 +27,18 @@ function generateAmidakuji() {
         return;
     }
     
+    // 改行区切りをメインとし、1行のみの場合はスペース区切りも試す
     participants = participantInput.split('\n').map(p => p.trim()).filter(p => p);
+    if (participants.length === 1 && participants[0].includes(' ')) {
+        // 1行でスペース区切りの場合
+        participants = participants[0].split(/\s+/).filter(p => p);
+    }
+    
     results = resultInput.split('\n').map(r => r.trim()).filter(r => r);
+    if (results.length === 1 && results[0].includes(' ')) {
+        // 1行でスペース区切りの場合
+        results = results[0].split(/\s+/).filter(r => r);
+    }
     
     if (participants.length !== results.length) {
         alert('参加者と結果の数を同じにしてください。');
