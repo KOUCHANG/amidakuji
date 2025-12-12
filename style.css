@@ -116,7 +116,50 @@ h1 {
     overflow-x: auto;
     margin: 20px 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.name-inputs {
+    display: flex;
+    gap: 10px;
+    margin: 10px 0;
     justify-content: center;
+    flex-wrap: wrap;
+}
+
+.name-input {
+    padding: 8px 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: bold;
+    text-align: center;
+    transition: all 0.3s;
+    background: white;
+    min-width: 60px;
+    max-width: 150px;
+    cursor: pointer;
+}
+
+.name-input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    cursor: text;
+}
+
+.name-input:hover:not(:focus) {
+    border-color: #667eea;
+    transform: translateY(-2px);
+}
+
+.name-input.participant {
+    color: #2c3e50;
+}
+
+.name-input.result {
+    color: #27ae60;
 }
 
 canvas {
