@@ -1,8 +1,8 @@
 // Build info (auto-updated by GitHub Actions)
 const BUILD_INFO = {
-    version: '2025.12.12-1241',
-    buildDate: '2025-12-12 21:41:21 +0900',
-    commit: '3f8c79e'
+    version: '2025.12.13-0913',
+    buildDate: '2025-12-13 18:13:46 +0900',
+    commit: 'ceeccb6'
 };
 
 let participants = [];
@@ -111,6 +111,28 @@ function updateAmidakuji() {
     // 背景色をランダムに変更（前回と異なる色を選択）
     changeBackgroundColor();
     
+    // 結果モードと線追加モードを解除
+    if (resultViewMode) {
+        resultViewMode = false;
+        const resultBtn = document.getElementById('toggleResultMode');
+        const resultInfo = document.getElementById('resultModeInfo');
+        if (resultBtn) {
+            resultBtn.textContent = '結果モード';
+            resultBtn.style.cssText = 'background: #667eea; color: white;';
+        }
+        if (resultInfo) resultInfo.style.display = 'none';
+    }
+    if (addLineMode) {
+        addLineMode = false;
+        const addBtn = document.getElementById('toggleAddMode');
+        const addInfo = document.getElementById('addModeInfo');
+        if (addBtn) {
+            addBtn.textContent = '線を追加';
+            addBtn.style.cssText = 'background: #6c757d; color: white;';
+        }
+        if (addInfo) addInfo.style.display = 'none';
+    }
+    
     // 参加者入力フィールドを作成
     createNameInputs();
     
@@ -121,6 +143,10 @@ function updateAmidakuji() {
     const settingsBtn = document.getElementById('settingsBtn');
     if (mainContainer) mainContainer.style.display = 'flex';
     if (settingsBtn) settingsBtn.style.display = 'block';
+    
+    // 作成モードのボタンを表示
+    const createModeButtons = document.getElementById('createModeButtons');
+    if (createModeButtons) createModeButtons.style.display = 'flex';
     
     // モーダルのタイトルとボタンを更新
     const modalTitle = document.getElementById('modalTitle');
